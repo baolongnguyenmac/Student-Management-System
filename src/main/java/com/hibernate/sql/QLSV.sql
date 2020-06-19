@@ -40,31 +40,32 @@ CREATE TABLE lop_hoc (
 GO
 
 CREATE TABLE monHoc_lopHoc (
+    maMonHocLopHoc BIGINT,
     maMonHoc BIGINT,
     maLop BIGINT,
     phongHoc VARCHAR(20),
 
-    CONSTRAINT pk_monHoc_lopHoc PRIMARY KEY (maMonHoc, maLop)
+    CONSTRAINT pk_monHoc_lopHoc PRIMARY KEY (maMonHocLopHoc)
 )
 GO
 
 CREATE TABLE sinhVien_monHoc (
-    maLop BIGINT,
-    maMonHoc BIGINT,
+    maSinhVienMonHoc BIGINT,
+    maMonHocLopHoc BIGINT,
     maSinhVien BIGINT,
     diemGK FLOAT,
     diemCK FLOAT,
     diemChuyenCan FLOAT,
     diemTong FLOAT,
 
-    CONSTRAINT pk_sinhVien_monHoc PRIMARY KEY (maLop , maMonHoc, maSinhVien)
+    CONSTRAINT pk_sinhVien_monHoc PRIMARY KEY (maSinhVienMonHoc)
 )
 GO
 
 ALTER TABLE monHoc_lopHoc ADD CONSTRAINT fk_monHocLopHoc_lopHoc FOREIGN KEY (maLop) REFERENCES lop_hoc(maLop)
 ALTER TABLE monHoc_lopHoc ADD CONSTRAINT fk_monHocLopHoc_monHoc FOREIGN KEY (maMonHoc) REFERENCES mon_hoc(maMonHoc)
 ALTER TABLE sinh_vien ADD CONSTRAINT fk_sinhVien_lopHoc FOREIGN KEY (maLop) REFERENCES lop_hoc(maLop)
-ALTER TABLE sinhVien_monHoc ADD CONSTRAINT fk_sinhVienMonHoc_monHocLopHoc FOREIGN KEY (maMonHoc, maLop) REFERENCES monHoc_lopHoc(maMonHoc, maLop)
+ALTER TABLE sinhVien_monHoc ADD CONSTRAINT fk_sinhVienMonHoc_monHocLopHoc FOREIGN KEY (maMonHocLopHoc) REFERENCES monHoc_lopHoc(maMonHocLopHoc)
 ALTER TABLE sinhVien_monHoc ADD CONSTRAINT fk_sinhVienHocMonHoc_sinhVien FOREIGN KEY (maSinhVien) REFERENCES sinh_vien(maSinhVien)
 GO
 

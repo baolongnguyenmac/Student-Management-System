@@ -1,7 +1,6 @@
 package com.hibernate.entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.*;
 
@@ -16,7 +15,7 @@ public class MonHoc {
     @Column (name = "tenMonHoc")
     private String _tenMonHoc;
 
-    @OneToMany (mappedBy = "pk.MonHoc", cascade = CascadeType.ALL)
+    @OneToMany (mappedBy = "list_monHoc_lopHoc")
     private Set<MonHoc_LopHoc> _monHoc_lopHoc = new HashSet<MonHoc_LopHoc>();
 
     public MonHoc() {
