@@ -11,7 +11,7 @@ USE QLSV
 GO
 
 CREATE TABLE sinh_vien (
-    maSinhVien BIGINT,
+    maSinhVien BIGINT IDENTITY(1,1),
     mssv CHAR(20),
     hoTen NVARCHAR(100),
     gioiTinh NCHAR(3),
@@ -24,7 +24,7 @@ CREATE TABLE sinh_vien (
 GO
 
 CREATE TABLE mon_hoc (
-    maMonHoc BIGINT,
+    maMonHoc BIGINT IDENTITY(1,1),
     tenMonHoc NVARCHAR(100),
 
     CONSTRAINT pk_monHoc PRIMARY KEY (maMonHoc)
@@ -32,7 +32,7 @@ CREATE TABLE mon_hoc (
 GO
 
 CREATE TABLE lop_hoc (
-    maLop BIGINT,
+    maLop BIGINT IDENTITY(1,1),
     tenLop VARCHAR(20),
 
     CONSTRAINT pk_lopHoc PRIMARY KEY (maLop)
@@ -40,7 +40,7 @@ CREATE TABLE lop_hoc (
 GO
 
 CREATE TABLE monHoc_lopHoc (
-    maMonHocLopHoc BIGINT,
+    maMonHocLopHoc BIGINT IDENTITY(1,1),
     maMonHoc BIGINT,
     maLop BIGINT,
     phongHoc VARCHAR(20),
@@ -50,7 +50,7 @@ CREATE TABLE monHoc_lopHoc (
 GO
 
 CREATE TABLE sinhVien_monHoc (
-    maSinhVienMonHoc BIGINT,
+    maSinhVienMonHoc BIGINT IDENTITY(1,1),
     maMonHocLopHoc BIGINT,
     maSinhVien BIGINT,
     diemGK FLOAT,
@@ -71,4 +71,4 @@ GO
 
 
 
-
+-- SELECT * FROM lop_hoc
