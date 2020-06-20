@@ -8,14 +8,14 @@ import javax.persistence.*;
 @Table (name = "mon_hoc")
 public class MonHoc {
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy =  GenerationType.IDENTITY)
     @Column (name = "maMonHoc")
     private long _maMonHoc;
 
     @Column (name = "tenMonHoc")
     private String _tenMonHoc;
 
-    @OneToMany (mappedBy = "list_monHoc_lopHoc")
+    @OneToMany (mappedBy = "_monHoc")
     private Set<MonHoc_LopHoc> _monHoc_lopHoc = new HashSet<MonHoc_LopHoc>();
 
     public MonHoc() {

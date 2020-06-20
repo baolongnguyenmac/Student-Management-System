@@ -8,26 +8,23 @@ import javax.persistence.*;
 @Table (name = "lop_hoc")
 public class LopHoc {
     @Id
-    @GeneratedValue
-    @Column (name = "maLop")
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Column (name = "maLop", updatable = false, nullable = false)
     private long _maLopHoc;
 
     @Column (name = "tenLop")
     private String _tenLop;
 
-    @OneToMany (mappedBy = "list_monHoc_lopHoc")
+    @OneToMany (mappedBy = "_lopHoc")
     private Set<MonHoc_LopHoc> _monHoc_lopHoc = new HashSet<MonHoc_LopHoc>();
 
-    @OneToMany (mappedBy = "list_sinhVien")
+    @OneToMany (mappedBy = "_lopHoc")
     private Set<SinhVien> _sinhVien = new HashSet<SinhVien>();
 
     public LopHoc() {}
 
-    public LopHoc(long _maLopHoc, String _tenLop, Set<MonHoc_LopHoc> _monHoc_lopHoc, Set<SinhVien> _sinhVien) {
-        this._maLopHoc = _maLopHoc;
+    public LopHoc(String _tenLop) {
         this._tenLop = _tenLop;
-        this._monHoc_lopHoc = _monHoc_lopHoc;
-        this._sinhVien = _sinhVien;
     }
 
     public long get_maLopHoc() {

@@ -6,25 +6,24 @@ import javax.persistence.*;
 @Table (name = "sinhVien_monHoc")
 public class SinhVien_MonHoc {
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy =  GenerationType.IDENTITY)
     @Column (name = "maSinhVienMonHoc")
     private long _maSinhVienMonHoc;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "maMonHocLopHoc")
-    private long _maMonHocLopHoc;
+    private MonHoc_LopHoc _monHocLopHoc;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "maSinhVien")
-    private long _maSinhVien;
-
-    public SinhVien_MonHoc(long _maSinhVienMonHoc, long _maMonHocLopHoc, long _maSinhVien) {
-        this._maSinhVienMonHoc = _maSinhVienMonHoc;
-        this._maMonHocLopHoc = _maMonHocLopHoc;
-        this._maSinhVien = _maSinhVien;
-    }
+    private SinhVien _sinhVien;
 
     public SinhVien_MonHoc() {
+    }
+
+    public SinhVien_MonHoc(MonHoc_LopHoc _monHocLopHoc, SinhVien _sinhVien) {
+        this._monHocLopHoc = _monHocLopHoc;
+        this._sinhVien = _sinhVien;
     }
 
     public long get_maSinhVienMonHoc() {
@@ -35,19 +34,19 @@ public class SinhVien_MonHoc {
         this._maSinhVienMonHoc = _maSinhVienMonHoc;
     }
 
-    public long get_maMonHocLopHoc() {
-        return _maMonHocLopHoc;
+    public MonHoc_LopHoc get_monHocLopHoc() {
+        return _monHocLopHoc;
     }
 
-    public void set_maMonHocLopHoc(long _maMonHocLopHoc) {
-        this._maMonHocLopHoc = _maMonHocLopHoc;
+    public void set_monHocLopHoc(MonHoc_LopHoc _monHocLopHoc) {
+        this._monHocLopHoc = _monHocLopHoc;
     }
 
-    public long get_maSinhVien() {
-        return _maSinhVien;
+    public SinhVien get_sinhVien() {
+        return _sinhVien;
     }
 
-    public void set_maSinhVien(long _maSinhVien) {
-        this._maSinhVien = _maSinhVien;
+    public void set_sinhVien(SinhVien _sinhVien) {
+        this._sinhVien = _sinhVien;
     }
 }

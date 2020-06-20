@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Table (name = "sinh_vien")
 public class SinhVien {
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy =  GenerationType.IDENTITY)
     @Column (name = "maSinhVien")
     private long _maSinhVien;
 
@@ -24,25 +24,22 @@ public class SinhVien {
     @Column (name = "cmnd")
     private String _cmnd;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "maLop")
-    private long _maLop;
+    private LopHoc _lopHoc;
 
-    @OneToMany (mappedBy = "list_sinhVien_monHoc")
+    @OneToMany (mappedBy = "_sinhVien", fetch = FetchType.LAZY)
     private Set<SinhVien_MonHoc> _sinhVien_monHoc = new HashSet<SinhVien_MonHoc>();
 
     public SinhVien() {
     }
 
-    public SinhVien(long _maSinhVien, String _mssv, String _hoTen, String gioiTinh, String _cmnd, long _maLop,
-            Set<SinhVien_MonHoc> _sinhVien_monHoc) {
-        this._maSinhVien = _maSinhVien;
+    public SinhVien(String _mssv, String _hoTen, String gioiTinh, String _cmnd, LopHoc _lopHoc) {
         this._mssv = _mssv;
         this._hoTen = _hoTen;
         this.gioiTinh = gioiTinh;
         this._cmnd = _cmnd;
-        this._maLop = _maLop;
-        this._sinhVien_monHoc = _sinhVien_monHoc;
+        this._lopHoc = _lopHoc;
     }
 
     public long get_maSinhVien() {
@@ -85,19 +82,19 @@ public class SinhVien {
         this._cmnd = _cmnd;
     }
 
-    public long get_maLop() {
-        return _maLop;
-    }
-
-    public void set_maLop(long _maLop) {
-        this._maLop = _maLop;
-    }
-
     public Set<SinhVien_MonHoc> get_sinhVien_monHoc() {
         return _sinhVien_monHoc;
     }
 
     public void set_sinhVien_monHoc(Set<SinhVien_MonHoc> _sinhVien_monHoc) {
         this._sinhVien_monHoc = _sinhVien_monHoc;
+    }
+
+    public LopHoc get_lopHoc() {
+        return _lopHoc;
+    }
+
+    public void set_lopHoc(LopHoc _lopHoc) {
+        this._lopHoc = _lopHoc;
     }
 }
