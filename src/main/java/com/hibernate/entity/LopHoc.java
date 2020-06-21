@@ -15,11 +15,11 @@ public class LopHoc {
     @Column (name = "tenLop")
     private String _tenLop;
 
-    @OneToMany (mappedBy = "_lopHoc")
-    private Set<MonHoc_LopHoc> _monHoc_lopHoc = new HashSet<MonHoc_LopHoc>();
+    @OneToMany (mappedBy = "_lopHoc", cascade = CascadeType.ALL)
+    private ArrayList<MonHoc_LopHoc> _monHoc_lopHoc = new ArrayList<MonHoc_LopHoc>();
 
-    @OneToMany (mappedBy = "_lopHoc")
-    private Set<SinhVien> _sinhVien = new HashSet<SinhVien>();
+    @OneToMany (mappedBy = "_lopHoc", cascade = CascadeType.ALL)
+    private ArrayList<SinhVien> _sinhVien = new ArrayList<SinhVien>();
 
     public LopHoc() {}
 
@@ -43,19 +43,19 @@ public class LopHoc {
         this._tenLop = _tenLop;
     }
 
-    public Set<MonHoc_LopHoc> get_monHoc_lopHoc() {
+    public ArrayList<MonHoc_LopHoc> get_monHoc_lopHoc() {
         return _monHoc_lopHoc;
     }
 
-    public void set_monHoc_lopHoc(Set<MonHoc_LopHoc> _monHoc_lopHoc) {
+    public void set_monHoc_lopHoc(ArrayList<MonHoc_LopHoc> _monHoc_lopHoc) {
         this._monHoc_lopHoc = _monHoc_lopHoc;
     }
 
-    public Set<SinhVien> get_sinhVien() {
+    public ArrayList<SinhVien> get_sinhVien() {
         return _sinhVien;
     }
 
-    public void set_sinhVien(Set<SinhVien> _sinhVien) {
+    public void set_sinhVien(ArrayList<SinhVien> _sinhVien) {
         this._sinhVien = _sinhVien;
     }
 }

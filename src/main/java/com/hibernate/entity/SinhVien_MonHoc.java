@@ -11,11 +11,11 @@ public class SinhVien_MonHoc {
     private long _maSinhVienMonHoc;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "maMonHocLopHoc")
+    // @JoinColumn(name = "maMonHocLopHoc")
     private MonHoc_LopHoc _monHocLopHoc;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "maSinhVien")
+    // @JoinColumn(name = "maSinhVien")
     private SinhVien _sinhVien;
 
     public SinhVien_MonHoc() {

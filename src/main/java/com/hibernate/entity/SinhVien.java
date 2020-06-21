@@ -29,7 +29,7 @@ public class SinhVien {
     private LopHoc _lopHoc;
 
     @OneToMany (mappedBy = "_sinhVien", fetch = FetchType.LAZY)
-    private Set<SinhVien_MonHoc> _sinhVien_monHoc = new HashSet<SinhVien_MonHoc>();
+    private ArrayList<SinhVien_MonHoc> _sinhVien_monHoc = new ArrayList<SinhVien_MonHoc>();
 
     public SinhVien() {
     }
@@ -82,11 +82,11 @@ public class SinhVien {
         this._cmnd = _cmnd;
     }
 
-    public Set<SinhVien_MonHoc> get_sinhVien_monHoc() {
+    public ArrayList<SinhVien_MonHoc> get_sinhVien_monHoc() {
         return _sinhVien_monHoc;
     }
 
-    public void set_sinhVien_monHoc(Set<SinhVien_MonHoc> _sinhVien_monHoc) {
+    public void set_sinhVien_monHoc(ArrayList<SinhVien_MonHoc> _sinhVien_monHoc) {
         this._sinhVien_monHoc = _sinhVien_monHoc;
     }
 

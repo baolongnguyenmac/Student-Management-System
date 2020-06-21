@@ -12,25 +12,25 @@ public class MonHoc_LopHoc {
     @Column (name = "maMonHocLopHoc")
     private long _maMonHocLopHoc;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "maMonHoc")
     private MonHoc _monHoc;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "maLopHoc")
     private LopHoc _lopHoc;
 
     @Column (name = "phongHoc")
     private String _phongHoc;
 
-    @OneToMany (mappedBy = "_monHocLopHoc")
-    private Set<SinhVien_MonHoc> _sinhVien_monHoc = new HashSet<SinhVien_MonHoc>();
+    @OneToMany (mappedBy = "_monHocLopHoc", cascade = CascadeType.ALL)
+    private ArrayList<SinhVien_MonHoc> _sinhVien_monHoc = new ArrayList<SinhVien_MonHoc>();
 
     public MonHoc_LopHoc() {
     }
 
     public MonHoc_LopHoc(long _maMonHocLopHoc, MonHoc _monHoc, LopHoc _lopHoc, String _phongHoc,
-            Set<SinhVien_MonHoc> _sinhVien_monHoc) {
+            ArrayList<SinhVien_MonHoc> _sinhVien_monHoc) {
         this._maMonHocLopHoc = _maMonHocLopHoc;
         this._monHoc = _monHoc;
         this._lopHoc = _lopHoc;
@@ -70,11 +70,11 @@ public class MonHoc_LopHoc {
         this._maMonHocLopHoc = _maMonHocLopHoc;
     }
 
-    public Set<SinhVien_MonHoc> get_sinhVien_monHoc() {
+    public ArrayList<SinhVien_MonHoc> get_sinhVien_monHoc() {
         return _sinhVien_monHoc;
     }
 
-    public void set_sinhVien_monHoc(Set<SinhVien_MonHoc> _sinhVien_monHoc) {
+    public void set_sinhVien_monHoc(ArrayList<SinhVien_MonHoc> _sinhVien_monHoc) {
         this._sinhVien_monHoc = _sinhVien_monHoc;
     }
 }

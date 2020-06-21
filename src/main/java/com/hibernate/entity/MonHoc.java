@@ -15,13 +15,13 @@ public class MonHoc {
     @Column (name = "tenMonHoc")
     private String _tenMonHoc;
 
-    @OneToMany (mappedBy = "_monHoc")
-    private Set<MonHoc_LopHoc> _monHoc_lopHoc = new HashSet<MonHoc_LopHoc>();
+    @OneToMany (mappedBy = "_monHoc", cascade = CascadeType.ALL)
+    private ArrayList<MonHoc_LopHoc> _monHoc_lopHoc = new ArrayList<MonHoc_LopHoc>();
 
     public MonHoc() {
     }
 
-    public MonHoc(long _maMonHoc, String _tenMonHoc, Set<MonHoc_LopHoc> _monHoc_lopHoc) {
+    public MonHoc(long _maMonHoc, String _tenMonHoc, ArrayList<MonHoc_LopHoc> _monHoc_lopHoc) {
         this._maMonHoc = _maMonHoc;
         this._tenMonHoc = _tenMonHoc;
         this._monHoc_lopHoc = _monHoc_lopHoc;
@@ -43,11 +43,11 @@ public class MonHoc {
         this._tenMonHoc = _tenMonHoc;
     }
 
-    public Set<MonHoc_LopHoc> get_monHoc_lopHoc() {
+    public ArrayList<MonHoc_LopHoc> get_monHoc_lopHoc() {
         return _monHoc_lopHoc;
     }
 
-    public void set_monHoc_lopHoc(Set<MonHoc_LopHoc> _monHoc_lopHoc) {
+    public void set_monHoc_lopHoc(ArrayList<MonHoc_LopHoc> _monHoc_lopHoc) {
         this._monHoc_lopHoc = _monHoc_lopHoc;
     }
 }
