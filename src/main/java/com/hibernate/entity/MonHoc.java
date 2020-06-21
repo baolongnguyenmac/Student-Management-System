@@ -16,7 +16,7 @@ public class MonHoc {
     private String _tenMonHoc;
 
     @OneToMany (mappedBy = "_monHoc", cascade = CascadeType.ALL)
-    private ArrayList<MonHoc_LopHoc> _monHoc_lopHoc = new ArrayList<MonHoc_LopHoc>();
+    private List<MonHoc_LopHoc> _monHoc_lopHoc = new ArrayList<MonHoc_LopHoc>();
 
     public MonHoc() {
     }
@@ -43,7 +43,7 @@ public class MonHoc {
         this._tenMonHoc = _tenMonHoc;
     }
 
-    public ArrayList<MonHoc_LopHoc> get_monHoc_lopHoc() {
+    public List<MonHoc_LopHoc> get_monHoc_lopHoc() {
         return _monHoc_lopHoc;
     }
 

@@ -24,7 +24,7 @@ public class MonHoc_LopHoc {
     private String _phongHoc;
 
     @OneToMany (mappedBy = "_monHocLopHoc", cascade = CascadeType.ALL)
-    private ArrayList<SinhVien_MonHoc> _sinhVien_monHoc = new ArrayList<SinhVien_MonHoc>();
+    private List<SinhVien_MonHoc> _sinhVien_monHoc = new ArrayList<SinhVien_MonHoc>();
 
     public MonHoc_LopHoc() {
     }
@@ -70,7 +70,7 @@ public class MonHoc_LopHoc {
         this._maMonHocLopHoc = _maMonHocLopHoc;
     }
 
-    public ArrayList<SinhVien_MonHoc> get_sinhVien_monHoc() {
+    public List<SinhVien_MonHoc> get_sinhVien_monHoc() {
         return _sinhVien_monHoc;
     }
 

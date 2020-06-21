@@ -29,7 +29,7 @@ public class SinhVien {
     private LopHoc _lopHoc;
 
     @OneToMany (mappedBy = "_sinhVien", fetch = FetchType.LAZY)
-    private ArrayList<SinhVien_MonHoc> _sinhVien_monHoc = new ArrayList<SinhVien_MonHoc>();
+    private List<SinhVien_MonHoc> _sinhVien_monHoc = new ArrayList<SinhVien_MonHoc>();
 
     public SinhVien() {
     }
@@ -82,7 +82,7 @@ public class SinhVien {
         this._cmnd = _cmnd;
     }
 
-    public ArrayList<SinhVien_MonHoc> get_sinhVien_monHoc() {
+    public List<SinhVien_MonHoc> get_sinhVien_monHoc() {
         return _sinhVien_monHoc;
     }
 
@@ -96,5 +96,12 @@ public class SinhVien {
 
     public void set_lopHoc(LopHoc _lopHoc) {
         this._lopHoc = _lopHoc;
+    }
+
+    public SinhVien(String _mssv, String _hoTen, String gioiTinh, String _cmnd) {
+        this._mssv = _mssv;
+        this._hoTen = _hoTen;
+        this.gioiTinh = gioiTinh;
+        this._cmnd = _cmnd;
     }
 }

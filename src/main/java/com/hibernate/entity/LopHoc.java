@@ -16,10 +16,10 @@ public class LopHoc {
     private String _tenLop;
 
     @OneToMany (mappedBy = "_lopHoc", cascade = CascadeType.ALL)
-    private ArrayList<MonHoc_LopHoc> _monHoc_lopHoc = new ArrayList<MonHoc_LopHoc>();
+    private List<MonHoc_LopHoc> _monHoc_lopHoc = new ArrayList<MonHoc_LopHoc>();
 
     @OneToMany (mappedBy = "_lopHoc", cascade = CascadeType.ALL)
-    private ArrayList<SinhVien> _sinhVien = new ArrayList<SinhVien>();
+    private List<SinhVien> _sinhVien = new ArrayList<SinhVien>();
 
     public LopHoc() {}
 
@@ -43,7 +43,7 @@ public class LopHoc {
         this._tenLop = _tenLop;
     }
 
-    public ArrayList<MonHoc_LopHoc> get_monHoc_lopHoc() {
+    public List<MonHoc_LopHoc> get_monHoc_lopHoc() {
         return _monHoc_lopHoc;
     }
 
@@ -51,11 +51,16 @@ public class LopHoc {
         this._monHoc_lopHoc = _monHoc_lopHoc;
     }
 
-    public ArrayList<SinhVien> get_sinhVien() {
+    public List<SinhVien> get_sinhVien() {
         return _sinhVien;
     }
 
     public void set_sinhVien(ArrayList<SinhVien> _sinhVien) {
         this._sinhVien = _sinhVien;
+    }
+
+    public void addSinhVien(SinhVien sv) {
+        sv.set_lopHoc(this);
+        _sinhVien.add(sv);
     }
 }
