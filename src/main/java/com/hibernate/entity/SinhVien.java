@@ -1,46 +1,39 @@
 package com.hibernate.entity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.*;
 
 @Entity
-@Table (name = "sinh_vien")
+@Table (name = "SinhVien")
 public class SinhVien {
     @Id
-    @GeneratedValue (strategy =  GenerationType.IDENTITY)
-    @Column (name = "maSinhVien")
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Column (name = "_maSinhVien")
     private long _maSinhVien;
 
-    @Column (name = "mssv")
+    @Column (name = "_mssv")
     private String _mssv;
 
-    @Column (name = "hoTen")
+    @Column (name = "_hoTen")
     private String _hoTen;
 
-    @Column (name = "gioiTinh")
+    @Column (name = "_gioiTinh")
     private String gioiTinh;
 
-    @Column (name = "cmnd")
+    @Column (name = "_cmnd")
     private String _cmnd;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "maLop")
+    // liên kết với 1 biến bên class LopHoc tên là private List<SinhVien> _listSinhVien
+    // mappedBy = "_lopHoc"
+    @ManyToOne (fetch = FetchType.LAZY)
+    @JoinColumn (name = "_maLop")
     private LopHoc _lopHoc;
 
-    @OneToMany (mappedBy = "_sinhVien", fetch = FetchType.LAZY)
-    private List<SinhVien_MonHoc> _sinhVien_monHoc = new ArrayList<SinhVien_MonHoc>();
-
-    public SinhVien() {
-    }
-
-    public SinhVien(String _mssv, String _hoTen, String gioiTinh, String _cmnd, LopHoc _lopHoc) {
-        this._mssv = _mssv;
-        this._hoTen = _hoTen;
-        this.gioiTinh = gioiTinh;
-        this._cmnd = _cmnd;
-        this._lopHoc = _lopHoc;
-    }
+    // liên kết với 1 biến bên class SinhVien_MonHoc tên là private SinhVien _sinhVien
+    @OneToMany (mappedBy = "_sinhVien")
+    private List<SinhVien_MonHoc> _listSinhVien_MonHoc = new ArrayList<SinhVien_MonHoc>();
 
     public long get_maSinhVien() {
         return _maSinhVien;
@@ -82,14 +75,6 @@ public class SinhVien {
         this._cmnd = _cmnd;
     }
 
-    public List<SinhVien_MonHoc> get_sinhVien_monHoc() {
-        return _sinhVien_monHoc;
-    }
-
-    public void set_sinhVien_monHoc(ArrayList<SinhVien_MonHoc> _sinhVien_monHoc) {
-        this._sinhVien_monHoc = _sinhVien_monHoc;
-    }
-
     public LopHoc get_lopHoc() {
         return _lopHoc;
     }
@@ -98,10 +83,26 @@ public class SinhVien {
         this._lopHoc = _lopHoc;
     }
 
+    public SinhVien() {
+    }
+
     public SinhVien(String _mssv, String _hoTen, String gioiTinh, String _cmnd) {
         this._mssv = _mssv;
         this._hoTen = _hoTen;
         this.gioiTinh = gioiTinh;
         this._cmnd = _cmnd;
+    }
+
+    public List<SinhVien_MonHoc> get_listSinhVien_MonHoc() {
+        return _listSinhVien_MonHoc;
+    }
+
+    public void set_listSinhVien_MonHoc(List<SinhVien_MonHoc> _listSinhVien_MonHoc) {
+        this._listSinhVien_MonHoc = _listSinhVien_MonHoc;
+    }
+
+    public void addSinhVien_MonHoc(SinhVien_MonHoc sv_mh) {
+        sv_mh.set_sinhVien(this);
+        _listSinhVien_MonHoc.add(sv_mh);
     }
 }

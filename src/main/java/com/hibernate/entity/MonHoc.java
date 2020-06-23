@@ -5,26 +5,25 @@ import java.util.*;
 import javax.persistence.*;
 
 @Entity
-@Table (name = "mon_hoc")
+@Table (name = "MonHoc")
 public class MonHoc {
     @Id
-    @GeneratedValue (strategy =  GenerationType.IDENTITY)
-    @Column (name = "maMonHoc")
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Column (name = "_maMonHoc")
     private long _maMonHoc;
 
-    @Column (name = "tenMonHoc")
+    @Column (name = "_tenMonHoc")
     private String _tenMonHoc;
 
-    @OneToMany (mappedBy = "_monHoc", cascade = CascadeType.ALL)
-    private List<MonHoc_LopHoc> _monHoc_lopHoc = new ArrayList<MonHoc_LopHoc>();
+    // liên kết với 1 biến bên class MonHoc_LopHoc tên là private MonHoc _monHoc
+    @OneToMany (mappedBy = "_monHoc")
+    private List<MonHoc_LopHoc> _listMonHoc_LopHoc = new ArrayList<MonHoc_LopHoc>();
 
     public MonHoc() {
     }
 
-    public MonHoc(long _maMonHoc, String _tenMonHoc, ArrayList<MonHoc_LopHoc> _monHoc_lopHoc) {
-        this._maMonHoc = _maMonHoc;
+    public MonHoc(String _tenMonHoc) {
         this._tenMonHoc = _tenMonHoc;
-        this._monHoc_lopHoc = _monHoc_lopHoc;
     }
 
     public long get_maMonHoc() {
@@ -43,11 +42,16 @@ public class MonHoc {
         this._tenMonHoc = _tenMonHoc;
     }
 
-    public List<MonHoc_LopHoc> get_monHoc_lopHoc() {
-        return _monHoc_lopHoc;
+    public List<MonHoc_LopHoc> get_listMonHoc_LopHoc() {
+        return _listMonHoc_LopHoc;
     }
 
-    public void set_monHoc_lopHoc(ArrayList<MonHoc_LopHoc> _monHoc_lopHoc) {
-        this._monHoc_lopHoc = _monHoc_lopHoc;
+    public void set_listMonHoc_LopHoc(List<MonHoc_LopHoc> _listMonHoc_LopHoc) {
+        this._listMonHoc_LopHoc = _listMonHoc_LopHoc;
+    }
+
+    public void addMonHoc_LopHoc(MonHoc_LopHoc mh_lh) {
+        mh_lh.set_monHoc(this);
+        _listMonHoc_LopHoc.add(mh_lh);
     }
 }

@@ -5,53 +5,37 @@ import java.util.*;
 import javax.persistence.*;
 
 @Entity
-@Table (name = "monHoc_lopHoc")
+@Table (name = "MonHoc_LopHoc")
 public class MonHoc_LopHoc {
     @Id
-    @GeneratedValue (strategy =  GenerationType.IDENTITY)
-    @Column (name = "maMonHocLopHoc")
-    private long _maMonHocLopHoc;
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @Column (name = "_maMonHoc_LopHoc")
+    private long _maMonHoc_LopHoc;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "maMonHoc")
-    private MonHoc _monHoc;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "maLopHoc")
+    // liên kết với 1 biến bên class LopHoc tên là private List<MonHoc_LopHoc> _listMonHoc_LopHoc
+    // mappedBy = "_lopHoc"
+    @ManyToOne (cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn (name = "_maLop")
     private LopHoc _lopHoc;
 
-    @Column (name = "phongHoc")
+    // liên kết với 1 biến bên class MonHoc tên là private List<MonHoc_LopHoc> _listMonHoc_LopHoc
+    // mappedBy = "_monHoc"
+    @ManyToOne (cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn (name = "_maMonHoc")
+    private MonHoc _monHoc;
+
+    @Column (name = "_phongHoc")
     private String _phongHoc;
 
-    @OneToMany (mappedBy = "_monHocLopHoc", cascade = CascadeType.ALL)
-    private List<SinhVien_MonHoc> _sinhVien_monHoc = new ArrayList<SinhVien_MonHoc>();
+    // liên kết với 1 biến bên class SinhVien_MonHoc tên là private MonHoc_LopHoc _monHoc_LopHoc
+    @OneToMany (mappedBy = "_monHoc_LopHoc")
+    private List<SinhVien_MonHoc> _listSinhVien_MonHoc = new ArrayList<SinhVien_MonHoc>();
 
     public MonHoc_LopHoc() {
     }
 
-    public MonHoc_LopHoc(long _maMonHocLopHoc, MonHoc _monHoc, LopHoc _lopHoc, String _phongHoc,
-            ArrayList<SinhVien_MonHoc> _sinhVien_monHoc) {
-        this._maMonHocLopHoc = _maMonHocLopHoc;
-        this._monHoc = _monHoc;
-        this._lopHoc = _lopHoc;
+    public MonHoc_LopHoc(String _phongHoc) {
         this._phongHoc = _phongHoc;
-        this._sinhVien_monHoc = _sinhVien_monHoc;
-    }
-
-    public String get_phongHoc() {
-        return _phongHoc;
-    }
-
-    public void set_phongHoc(String _phongHoc) {
-        this._phongHoc = _phongHoc;
-    }
-
-    public MonHoc get_monHoc() {
-        return _monHoc;
-    }
-
-    public void set_monHoc(MonHoc _monHoc) {
-        this._monHoc = _monHoc;
     }
 
     public LopHoc get_lopHoc() {
@@ -62,19 +46,40 @@ public class MonHoc_LopHoc {
         this._lopHoc = _lopHoc;
     }
 
-    public long get_maMonHocLopHoc() {
-        return _maMonHocLopHoc;
+    public MonHoc get_monHoc() {
+        return _monHoc;
     }
 
-    public void set_maMonHocLopHoc(long _maMonHocLopHoc) {
-        this._maMonHocLopHoc = _maMonHocLopHoc;
+    public void set_monHoc(MonHoc _monHoc) {
+        this._monHoc = _monHoc;
     }
 
-    public List<SinhVien_MonHoc> get_sinhVien_monHoc() {
-        return _sinhVien_monHoc;
+    public String get_phongHoc() {
+        return _phongHoc;
     }
 
-    public void set_sinhVien_monHoc(ArrayList<SinhVien_MonHoc> _sinhVien_monHoc) {
-        this._sinhVien_monHoc = _sinhVien_monHoc;
+    public void set_phongHoc(String _phongHoc) {
+        this._phongHoc = _phongHoc;
+    }
+
+    public long get_maMonHoc_LopHoc() {
+        return _maMonHoc_LopHoc;
+    }
+
+    public void set_maMonHoc_LopHoc(long _maMonHoc_LopHoc) {
+        this._maMonHoc_LopHoc = _maMonHoc_LopHoc;
+    }
+
+    public List<SinhVien_MonHoc> get_listSinhVien_MonHoc() {
+        return _listSinhVien_MonHoc;
+    }
+
+    public void set_listSinhVien_MonHoc(List<SinhVien_MonHoc> _listSinhVien_MonHoc) {
+        this._listSinhVien_MonHoc = _listSinhVien_MonHoc;
+    }
+
+    public void addSinhVien_MonHoc(SinhVien_MonHoc sv_mh) {
+        sv_mh.set_monHoc_LopHoc(this);
+        _listSinhVien_MonHoc.add(sv_mh);
     }
 }
