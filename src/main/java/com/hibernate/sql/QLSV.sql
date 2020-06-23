@@ -10,65 +10,78 @@ GO
 USE QLSV
 GO
 
-CREATE TABLE sinh_vien (
-    maSinhVien BIGINT IDENTITY(1,1),
-    mssv CHAR(20),
-    hoTen NVARCHAR(100),
-    gioiTinh NCHAR(3),
-    cmnd INT,
-    maLop BIGINT,
+CREATE TABLE SinhVien (
+    _maSinhVien BIGINT IDENTITY(1,1),
+    _mssv CHAR(10),
+    _hoTen NVARCHAR(100),
+    _gioiTinh NVARCHAR(3),
+    _cmnd CHAR(9),
+    _maLop BIGINT,
 
-    CONSTRAINT pk_sinhVien PRIMARY KEY(maSinhVien),
-    CONSTRAINT checkGioiTinh CHECK (gioiTinh IN ('Nam', 'nam', N'Nữ', N'nữ'))
+    CONSTRAINT PK_SinhVien PRIMARY KEY(_maSinhVien)
 )
 GO
 
-CREATE TABLE mon_hoc (
-    maMonHoc BIGINT IDENTITY(1,1),
-    tenMonHoc NVARCHAR(100),
+CREATE TABLE LopHoc (
+    _maLop BIGINT IDENTITY(1,1),
+    _tenLop VARCHAR(10),
 
-    CONSTRAINT pk_monHoc PRIMARY KEY (maMonHoc)
+    CONSTRAINT PK_LopHoc PRIMARY KEY(_maLop)
 )
 GO
 
-CREATE TABLE lop_hoc (
-    maLop BIGINT IDENTITY(1,1),
-    tenLop VARCHAR(20),
+CREATE TABLE MonHoc (
+    _maMonHoc BIGINT IDENTITY(1,1),
+    _tenMonHoc NVARCHAR(100),
 
-    CONSTRAINT pk_lopHoc PRIMARY KEY (maLop)
+    CONSTRAINT PK_MonHoc PRIMARY KEY(_maMonHoc)
 )
 GO
 
-CREATE TABLE monHoc_lopHoc (
-    maMonHocLopHoc BIGINT IDENTITY(1,1),
-    maMonHoc BIGINT,
-    maLop BIGINT,
-    phongHoc VARCHAR(20),
+CREATE TABLE MonHoc_LopHoc (
+    _maMonHoc_LopHoc BIGINT IDENTITY(1,1),
+    _maLop BIGINT,
+    _maMonHoc BIGINT,
+    _phongHoc VARCHAR(10),
 
-    CONSTRAINT pk_monHoc_lopHoc PRIMARY KEY (maMonHocLopHoc)
+    CONSTRAINT PK_MonHoc_LopHoc PRIMARY KEY(_maMonHoc_LopHoc)
 )
 GO
 
-CREATE TABLE sinhVien_monHoc (
-    maSinhVienMonHoc BIGINT IDENTITY(1,1),
-    maMonHocLopHoc BIGINT,
-    maSinhVien BIGINT,
-    diemGK FLOAT,
-    diemCK FLOAT,
-    diemChuyenCan FLOAT,
-    diemTong FLOAT,
+CREATE TABLE SinhVien_MonHoc (
+    _maSinhVien_MonHoc BIGINT IDENTITY(1,1),
+    _maMonHoc_LopHoc BIGINT,
+    _maSinhVien BIGINT,
+    _diemCC FLOAT,
+    _diemGK FLOAT,
+    _diemCK FLOAT,
+    _diemTong FLOAT,
 
-    CONSTRAINT pk_sinhVien_monHoc PRIMARY KEY (maSinhVienMonHoc)
+    CONSTRAINT PK_SinhVien_MonHoc PRIMARY KEY(_maSinhVien_MonHoc)
 )
 GO
 
-ALTER TABLE monHoc_lopHoc ADD CONSTRAINT fk_monHocLopHoc_lopHoc FOREIGN KEY (maLop) REFERENCES lop_hoc(maLop)
-ALTER TABLE monHoc_lopHoc ADD CONSTRAINT fk_monHocLopHoc_monHoc FOREIGN KEY (maMonHoc) REFERENCES mon_hoc(maMonHoc)
-ALTER TABLE sinh_vien ADD CONSTRAINT fk_sinhVien_lopHoc FOREIGN KEY (maLop) REFERENCES lop_hoc(maLop)
-ALTER TABLE sinhVien_monHoc ADD CONSTRAINT fk_sinhVienMonHoc_monHocLopHoc FOREIGN KEY (maMonHocLopHoc) REFERENCES monHoc_lopHoc(maMonHocLopHoc)
-ALTER TABLE sinhVien_monHoc ADD CONSTRAINT fk_sinhVienHocMonHoc_sinhVien FOREIGN KEY (maSinhVien) REFERENCES sinh_vien(maSinhVien)
+ALTER TABLE SinhVien ADD CONSTRAINT FK_SinhVien_LopHoc FOREIGN KEY (_maLop) REFERENCES LopHoc(_maLop)
+ALTER TABLE MonHoc_LopHoc ADD CONSTRAINT FK_MonHocLopHoc_LopHoc FOREIGN KEY (_maLop) REFERENCES LopHoc(_maLop)
+ALTER TABLE MonHoc_LopHoc ADD CONSTRAINT FK_MonHocLopHoc_MonHoc FOREIGN KEY (_maMonHoc) REFERENCES MonHoc(_maMonHoc)
+ALTER TABLE SinhVien_MonHoc ADD CONSTRAINT FK_SinhVienMonHoc_MonHocLopHoc FOREIGN KEY (_maMonHoc_LopHoc) REFERENCES MonHoc_LopHoc(_maMonHoc_LopHoc)
+ALTER TABLE SinhVien_MonHoc ADD CONSTRAINT FK_SinhVienMonHoc_SinhVien FOREIGN KEY (_maSinhVien) REFERENCES SinhVien(_maSinhVien)
 GO
 
+insert SinhVien_MonHoc (_maMonHoc_LopHoc, _maSinhVien) VALUES (1,1)
+
+SELECT * FROM MonHoc
+SELECT * from LopHoc
+select * from SinhVien
+select * from MonHoc_LopHoc
+select * from SinhVien_MonHoc
 
 
--- SELECT * FROM lop_hoc
+select 
+    mh._maMonHoc, mh._tenMonHoc
+from 
+    SinhVien sv, SinhVien_MonHoc svmh, MonHoc_LopHoc mhlh, MonHoc mh
+where 
+    sv._mssv = '18120201' and svmh._maSinhVien = sv._maSinhVien
+    and svmh._maMonHoc_LopHoc = mhlh._maMonHoc_LopHoc
+    and mhlh._maMonHoc = mh._maMonHoc
