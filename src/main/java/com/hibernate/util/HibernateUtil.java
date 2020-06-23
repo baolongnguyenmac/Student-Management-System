@@ -52,20 +52,6 @@ public class HibernateUtil {
         }
     }
 
-    // public static SessionFactory getSessionFactory() {
-    //     if(sessionFactory == null) {
-    //         sessionFactory = buildSessionFactory();
-    //     }
-    //     return sessionFactory;
-    // }
-
-    // public static SessionFactory getSessionAnnotationFactory() {
-    //     if(sessionAnnotationFactory == null) {
-    //         sessionAnnotationFactory = buildSessionAnnotationFactory();
-    //     }
-    //     return sessionAnnotationFactory;
-    // }
-
     public static SessionFactory getSessionJavaConfigFactory() {
         if(sessionJavaConfigFactory == null) {
             sessionJavaConfigFactory = buildSessionJavaConfigFactory();

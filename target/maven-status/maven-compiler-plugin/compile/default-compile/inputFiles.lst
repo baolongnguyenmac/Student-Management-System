@@ -1,1 +1,11 @@
+/Users/nguyenbaolong/Desktop/Student-Management-System/src/main/java/com/hibernate/entity/SinhVien_MonHoc.java
+/Users/nguyenbaolong/Desktop/Student-Management-System/src/main/java/com/hibernate/dao/MonHocDAO.java
+/Users/nguyenbaolong/Desktop/Student-Management-System/src/main/java/com/hibernate/entity/SinhVien.java
+/Users/nguyenbaolong/Desktop/Student-Management-System/src/main/java/com/hibernate/entity/MonHoc.java
+/Users/nguyenbaolong/Desktop/Student-Management-System/src/main/java/com/hibernate/dao/LopHocDAO.java
+/Users/nguyenbaolong/Desktop/Student-Management-System/src/main/java/com/hibernate/dao/SinhVien_MonHocDAO.java
+/Users/nguyenbaolong/Desktop/Student-Management-System/src/main/java/com/hibernate/dao/SinhVienDAO.java
+/Users/nguyenbaolong/Desktop/Student-Management-System/src/main/java/com/hibernate/entity/MonHoc_LopHoc.java
+/Users/nguyenbaolong/Desktop/Student-Management-System/src/main/java/com/hibernate/entity/LopHoc.java
 /Users/nguyenbaolong/Desktop/Student-Management-System/src/main/java/com/hibernate/util/HibernateUtil.java
+/Users/nguyenbaolong/Desktop/Student-Management-System/src/main/java/com/hibernate/dao/MonHoc_LopHocDAO.java
