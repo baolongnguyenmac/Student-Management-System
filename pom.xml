@@ -7,12 +7,12 @@
     <name>QLSV</name>
     <url>http://maven.apache.org</url>
     <dependencies>
-        <!-- <dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
             <scope>test</scope>
-        </dependency> -->
+        </dependency>
         <!-- add the JDBC Driver -->
         <!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
         <dependency>
@@ -28,4 +28,8 @@
             <type>pom</type>
         </dependency>
     </dependencies>
+    <properties>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
 </project>
