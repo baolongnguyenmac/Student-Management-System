@@ -47,7 +47,7 @@ public class HibernateUtil {
         }
         catch (Throwable ex) {
             // System.err.println("Initial SessionFactory creation failed." + ex);
-            System.err.println("Ăn lồn ở dòng 49 file HibernateUtil");
+            System.err.println("Lỗi ở hàm buildSessionJavaConfigFactory file HibernateUtil");
             throw new ExceptionInInitializerError(ex);
         }
     }
