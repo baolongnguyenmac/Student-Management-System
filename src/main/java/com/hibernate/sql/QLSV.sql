@@ -83,7 +83,9 @@ go
 
 insert MonHoc (_tenMonHoc) values (N'Lập trình hướng đối tượng')
 insert MonHoc (_tenMonHoc) values (N'Cơ sở dữ liệu')
+go 
 
+/* -- insert data for testing
 -- 18ctt1 - oop - e1
 insert MonHoc_LopHoc (_maLop, _maMonHoc, _phongHoc) values (1,1,'E1')
 -- 18ctt1 - db - e2
@@ -119,12 +121,7 @@ insert SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc, _diemCC, _diemCK, _diemGK
 -- sv 5 - 18ctt1 - db - e2 - mark - optional 
 insert SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc, _diemCC, _diemCK, _diemGK, _diemTong) values (5,2,1,10,1,10)
 go
-
--- _mssv CHAR(10) UNIQUE,
--- _hoTen NVARCHAR(100),
--- _gioiTinh NVARCHAR(3),
--- _cmnd CHAR(9) UNIQUE,
--- _maLop BIGINT,
+*/
 
 -- -- kiểm tra sự tồn tại của 1 lớp
 -- -- truyền vào tên lớp
@@ -155,7 +152,7 @@ END
 GO
 
 -- yêu cầu 3: import TKB của 1 lớp vào hệ thống
-            -- sinh viên thuộc lớp phải xem được tkb
+            -- sinh viên thuộc lớp phải xem được tkb (nằm ở yêu cầu 6 và đã xong)
             -- mặc định sinh viên đều học các môn có trong lớp: import sẵn cho sinh viên trong SinhVien_MonHoc luôn
 CREATE PROCEDURE Import_TKB @tenMonHoc NVARCHAR(100), @tenLop VARCHAR(10), @phongHoc VARCHAR(10)
 AS BEGIN
@@ -164,7 +161,7 @@ AS BEGIN
     IF (EXISTS(SELECT * FROM LopHoc l WHERE l._tenLop = @tenLop) 
         AND EXISTS(SELECT * FROM MonHoc mh WHERE mh._tenMonHoc = @tenMonHoc)) 
     BEGIN
-        -- add môn học vào hệ thống
+        -- add lịch học vào hệ thống bằng cách insert data vào MonHoc_LopHoc
         DECLARE @maLop BIGINT, @maMonHoc BIGINT
         SET @maLop = (
             SELECT lh._maLop
@@ -178,10 +175,47 @@ AS BEGIN
         )
         INSERT MonHoc_LopHoc (_maLop, _maMonHoc, _phongHoc) VALUES (@maLop, @maMonHoc, @phongHoc)
 
+        -- tìm lại mã môn học lớp học vừa được add vào để làm yêu cầu bên dưới
+        DECLARE @maMonHoc_LopHoc BIGINT
+        SET @maMonHoc_LopHoc = (
+            SELECT mh_lh._maMonHoc_LopHoc
+            FROM MonHoc_LopHoc mh_lh
+            WHERE mh_lh._maLop = @maLop
+                AND mh_lh._maMonHoc = @maMonHoc
+        )
+
         -- sinh viên thuộc @tenLop phải học môn học vừa được add vào 
-        
+        -- khai báo con trỏ trỏ đến _maSinhVien của SinhVien (which has _maLopHoc = @maLop)
+        DECLARE pointerSinhVien CURSOR FOR (
+            SELECT sv._maSinhVien 
+            FROM SinhVien sv 
+            WHERE sv._maLop = @maLop
+        )
+
+        -- khai báo biến chứa _maSinhVien
+        DECLARE @maSinhVien BIGINT
+
+        -- mở con trỏ để làm việc
+        OPEN pointerSinhVien
+
+        -- đọc vào 1 dòng 
+        FETCH NEXT FROM pointerSinhVien INTO @maSinhVien
+
+        -- loop: chừng nào còn đọc được data thì next con trỏ lên 1 dòng 
+        WHILE @@FETCH_STATUS = 0 BEGIN
+            INSERT SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc) VALUES (@maSinhVien, @maMonHoc_LopHoc)
+            -- i++
+            FETCH NEXT FROM pointerSinhVien INTO @maSinhVien
+        END
+
+        -- đóng con trỏ và giải phóng nó
+        CLOSE pointerSinhVien
+        DEALLOCATE pointerSinhVien
     END
 END
+GO
+
+EXEC Import_TKB N'Lập trình hướng đối tượng', '18CTT2', 'E2'
 GO
 
 -- yêu cầu 5: xem danh sách lớp
