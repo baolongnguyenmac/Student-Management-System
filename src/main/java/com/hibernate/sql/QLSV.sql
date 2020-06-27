@@ -218,11 +218,74 @@ AS BEGIN
 END
 GO
 
--- EXEC Import_TKB N'Lập trình hướng đối tượng', '18CTT2', 'E2'
+-- EXEC Import_TKB N'Lập trình hướng đối tượng', '18CTT1', 'E2'
+-- EXEC Import_TKB N'Cơ sở dữ liệu', '18CTT2', 'E3'
 -- GO
 
--- yêu cầu 4.1: Sinh viên A không học môn B
--- yêu cầu 4.2: Sinh viên C xin học môn D
+-- yêu cầu 4.1: Sinh viên A xin học môn B
+CREATE PROCEDURE DangKyMonHoc @mssv CHAR(10), @tenMonHoc NVARCHAR(100)
+AS BEGIN
+    IF (EXISTS (SELECT * FROM SinhVien sv WHERE sv._mssv = @mssv)
+        AND EXISTS (SELECT * FROM MonHoc mh WHERE mh._tenMonHoc = @tenMonHoc))
+    BEGIN
+        DECLARE @maSinhVien BIGINT, @maMonHoc BIGINT
+        SET @maSinhVien = (
+            SELECT sv._maSinhVien
+            FROM SinhVien sv
+            WHERE sv._mssv = @mssv
+        )
+        SET @maMonHoc = (
+            SELECT mh._maMonHoc
+            FROM MonHoc mh 
+            WHERE mh._tenMonHoc = @tenMonHoc
+        )
+
+        DECLARE @maMonHoc_LopHoc BIGINT
+        SET @maMonHoc_LopHoc = (
+            SELECT TOP 1 mh_lh._maMonHoc_LopHoc
+            FROM MonHoc_LopHoc mh_lh
+            WHERE mh_lh._maMonHoc = @maMonHoc
+        )
+
+        INSERT SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc) VALUES (@maSinhVien, @maMonHoc_LopHoc)
+    END
+END
+GO
+
+-- EXEC DangKyMonHoc '18120201', N'Cơ sở dữ liệu'
+-- GO
+
+-- yêu cầu 4.2: Sinh viên C không học môn D
+CREATE PROCEDURE HuyBoMonHoc @mssv CHAR(10), @tenMonHoc NVARCHAR(100)
+AS BEGIN
+    IF (EXISTS (SELECT * FROM SinhVien sv WHERE sv._mssv = @mssv)
+        AND EXISTS (
+            SELECT * 
+            FROM SinhVien sv, SinhVien_MonHoc sv_mh, MonHoc_LopHoc mh_lh, MonHoc mh 
+            WHERE sv._mssv = @mssv AND sv._maSinhVien = sv_mh._maSinhVien
+                AND sv_mh._maMonHoc_LopHoc = mh_lh._maMonHoc_LopHoc
+                AND mh_lh._maMonHoc = mh._maMonHoc
+                AND mh._tenMonHoc = @tenMonHoc
+        )
+    )
+    BEGIN
+        DECLARE @maSinhVien_MonHoc BIGINT
+        SET @maSinhVien_MonHoc = (
+            SELECT sv_mh._maSinhVien_MonHoc
+            FROM SinhVien sv, SinhVien_MonHoc sv_mh, MonHoc_LopHoc mh_lh, MonHoc mh 
+            WHERE sv._mssv = @mssv AND sv._maSinhVien = sv_mh._maSinhVien
+                AND sv_mh._maMonHoc_LopHoc = mh_lh._maMonHoc_LopHoc
+                AND mh_lh._maMonHoc = mh._maMonHoc
+                AND mh._tenMonHoc = @tenMonHoc
+        )
+
+        DELETE FROM SinhVien_MonHoc WHERE _maSinhVien_MonHoc = @maSinhVien_MonHoc
+    END
+END
+GO
+
+-- EXEC HuyBoMonHoc '18120201', N'Cơ sở dữ liệu'
+-- GO
 
 -- yêu cầu 5: xem danh sách lớp
 CREATE PROCEDURE XemDanhSachLop @tenLop VARCHAR(10)
@@ -293,11 +356,11 @@ GO
 -- EXEC XemDiem_SinhVien '18120201'
 -- GO
 
--- SELECT * FROM MonHoc
--- SELECT * from LopHoc
--- select * from SinhVien
--- select * from MonHoc_LopHoc
--- select * from SinhVien_MonHoc
+SELECT * FROM MonHoc
+SELECT * from LopHoc
+select * from SinhVien
+select * from MonHoc_LopHoc
+select * from SinhVien_MonHoc
 
 
 -- select 
