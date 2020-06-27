@@ -151,6 +151,9 @@ AS BEGIN
 END
 GO
 
+-- EXEC Import_SinhVien '18120201', N'Nguyễn Bảo Long', 'Nam', '241845617', '18CTT2'
+-- GO
+
 -- yêu cầu 3: import TKB của 1 lớp vào hệ thống
             -- sinh viên thuộc lớp phải xem được tkb (nằm ở yêu cầu 6 và đã xong)
             -- mặc định sinh viên đều học các môn có trong lớp: import sẵn cho sinh viên trong SinhVien_MonHoc luôn
@@ -215,8 +218,11 @@ AS BEGIN
 END
 GO
 
-EXEC Import_TKB N'Lập trình hướng đối tượng', '18CTT2', 'E2'
-GO
+-- EXEC Import_TKB N'Lập trình hướng đối tượng', '18CTT2', 'E2'
+-- GO
+
+-- yêu cầu 4.1: Sinh viên A không học môn B
+-- yêu cầu 4.2: Sinh viên C xin học môn D
 
 -- yêu cầu 5: xem danh sách lớp
 CREATE PROCEDURE XemDanhSachLop @tenLop VARCHAR(10)
@@ -227,6 +233,9 @@ AS BEGIN
         AND lh._tenLop = @tenLop
 END
 GO
+
+-- EXEC XemDanhSachLop '18CTT2'
+-- GO
 
 -- yêu cầu 6.1: xem TKB phía sinh viên
 CREATE PROCEDURE XemTKB_SinhVien @mssv CHAR(10)
@@ -239,6 +248,9 @@ AS BEGIN
 END
 GO
 
+-- EXEC XemTKB_SinhVien '18120227'
+-- GO
+
 -- yêu cầu 6.2: xem TKB theo lớp của giáo vụ
 CREATE PROCEDURE XemTKB_LopHoc @tenLop VARCHAR(10)
 AS BEGIN
@@ -249,6 +261,9 @@ AS BEGIN
         AND lh._tenLop = @tenLop
 END
 GO
+
+-- EXEC XemTKB_LopHoc '18CTT2'
+-- GO
 
 -- yêu cầu 8: Xem bảng điểm theo môn học cho giáo vụ
 CREATE PROCEDURE XemDiem_GiaoVu @tenMonHoc NVARCHAR(100)
@@ -261,6 +276,9 @@ AS BEGIN
 END
 GO
 
+-- EXEC XemDiem_GiaoVu N'Lập trình hướng đối tượng'
+-- GO
+
 -- yêu cầu 10: Xem bảng điểm cho sinh viên
 CREATE PROCEDURE XemDiem_SinhVien @mssv CHAR(10)
 AS BEGIN
@@ -272,11 +290,14 @@ AS BEGIN
 END
 GO
 
-SELECT * FROM MonHoc
-SELECT * from LopHoc
-select * from SinhVien
-select * from MonHoc_LopHoc
-select * from SinhVien_MonHoc
+-- EXEC XemDiem_SinhVien '18120201'
+-- GO
+
+-- SELECT * FROM MonHoc
+-- SELECT * from LopHoc
+-- select * from SinhVien
+-- select * from MonHoc_LopHoc
+-- select * from SinhVien_MonHoc
 
 
 -- select 
