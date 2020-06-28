@@ -1,34 +1,37 @@
 package com.hibernate.dao;
 
-import com.hibernate.entity.MonHoc;
+import com.hibernate.entity.*;
 import com.hibernate.util.HibernateUtil;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.hibernate.*;
 
 public class MonHocDAO {
-    public static void main(String[] args) {
-        SessionFactory sessionFactory = HibernateUtil.getSessionJavaConfigFactory();
+    public static void addMonHoc(String tenMonHoc) {
         Session session = null;
-
         try {
-            session = sessionFactory.openSession();
+            session = HibernateUtil.getSessionJavaConfigFactory().openSession();
             session.beginTransaction();
 
-            MonHoc m = new MonHoc("Lập trình hướng đối tượng");
-            MonHoc m1 = new MonHoc("Cơ sở dữ liệu");
+            // do something here
+            MonHoc mh = new MonHoc(tenMonHoc);
+            session.save(mh);
 
-            session.save(m);
-            session.save(m1);
+            session.flush();
             session.getTransaction().commit();
+            session.clear();
         }
-        catch (Exception e) {
+        catch (HibernateException he) {
             session.getTransaction().rollback();
-            System.out.println("ăn lồn ở dòng 27 file MonHocDAO");
+            System.err.println("Lỗi ở hàm addMonHoc(String tenMonHoc) file MonHocDAO");
         }
-
-        if (session != null) {
-            session.close();
+        finally {
+            if (session != null) {
+                session.close();
+            }
         }
+    }
+    public static void main(String[] args) {
+        addMonHoc("Lập trình hướng đối tượng");
+        addMonHoc("Cơ sở dữ liệu");
     }
 }
