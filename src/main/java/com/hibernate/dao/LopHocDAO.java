@@ -6,8 +6,6 @@ import java.sql.*;
 import com.hibernate.entity.*;
 import com.hibernate.util.HibernateUtil;
 
-import org.hibernate.*;
-
 public class LopHocDAO {
     public static void addSinhVien(SinhVien sv, String tenLop) {
         Connection conn = null;
@@ -53,84 +51,73 @@ public class LopHocDAO {
         return sv;
     }
 
+    // import danh sách lớp sử dụng stored procedure
     public static void importDanhSachLop(String filename) {
-        Session session = null;
+        Connection conn = null;
         BufferedReader br = null;
         String line = null;
-        try {
-            session = HibernateUtil.getSessionJavaConfigFactory().openSession();
-            session.beginTransaction();
 
+        try {
+            conn = HibernateUtil.getConnection();
             br = new BufferedReader(new FileReader(filename));
-            line = br.readLine();
-            LopHoc l = new LopHoc(line);
+
+            // do something here
+            CallableStatement statement = conn.prepareCall("{Call Import_SinhVien(?, ?, ?, ?, ?)}");
+            CallableStatement statement1 = conn.prepareCall("{Call create_lopHoc(?)}");
+            String tenLop = br.readLine();
+            // set _tenLop cho statement1
+            statement1.setString(1, tenLop);
+            statement1.execute();
+
             br.readLine();
             while ((line = br.readLine()) != null) {
                 SinhVien sv = readSinhVien(line);
-                l.addSinhVien(sv);
+                statement.setString(1, sv.get_mssv());
+                statement.setString(2, sv.get_hoTen());
+                statement.setString(3, sv.getGioiTinh());
+                statement.setString(4, sv.get_cmnd());
+                statement.setString(5, tenLop);
+                statement.execute();
             }
-
-            session.save(l);
-
-            session.flush();
-            session.getTransaction().commit();
-            session.clear();
         }
-        catch (FileNotFoundException err) {
-            System.err.println("Không tìm thấy file ở hàm readStudentList(String filename) file LopHocDAO");
-        }
-        catch (IOException e) {
-            System.err.println("Lỗi IOE ở hàm readStudentList(String filename) file LopHocDAO");
-        }
-        catch (HibernateException he) {
-            session.getTransaction().rollback();
+        catch (SQLException se) {
+            try {
+                conn.rollback();
+            }
+            catch (SQLException see) {
+                System.err.println("Lỗi part 2 ở hàm importDanhSachLop(String filename) file LopHocDAO");
+            }
             System.err.println("Lỗi ở hàm importDanhSachLop(String filename) file LopHocDAO");
-            // khi code đến giao diện thì phải throw 1 cái nữa để giao diện bắt được
-            // sau khi bắt được, giao diện sẽ làm 1 con popup nhẹ thông báo cho ngừoi dùng
+            // sau này khi code giao diện phải throw thêm 
+            // để khi lỗi xảy ra còn biết đường mà quăng popup :)
+        }
+        catch (IOException ioe) {
+            System.err.println(ioe);
         }
         finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                }
+                catch (SQLException se) {
+                    System.err.println("Đến đây mà còn lỗi thì chắc toang nặng\nHàm importDanhSachLop(String filename) file LopHocDAO");
+                }
+            }
             if (br != null) {
                 try {
                     br.close();
                 }
-                catch (IOException ex) {
-                    System.err.println("Đến đây mà còn lỗi thì toang nặng\nreadStudentList(String filename) file LopHocDAO");
+                catch (IOException e) {
+                    System.err.println("importDanhSachLop(String filename) trong LopHocDAO");
                 }
-            }
-            if (session != null) {
-                session.close();
             }
         }
     }
 
-    // public static void addLopHoc(String tenLop) {
-    //     Session session = null;
-    //     try {
-    //         session = HibernateUtil.getSessionJavaConfigFactory().openSession();
-    //         session.beginTransaction();
-
-    //         // do something here
-    //         LopHoc lh = new LopHoc(tenLop);
-    //         session.save(lh);
-
-    //         session.flush();
-    //         session.getTransaction().commit();
-    //         session.clear();
-    //     }
-    //     catch (HibernateException he) {
-    //         session.getTransaction().rollback();
-    //         System.err.println("Lỗi ở hàm addLopHoc(String tenLop) file LopHocDAO");
-    //         // khi code đến giao diện thì phải throw 1 cái nữa để giao diện bắt được
-    //         // sau khi bắt được, giao diện sẽ làm 1 con popup nhẹ thông báo cho ngừoi dùng
-    //     }
-    //     finally {
-    //         if (session != null) {
-    //             session.close();
-    //         }
-    //     }
-    // }
     public static void main(String[] args) {
         // addLopHoc("18CTT2");
         importDanhSachLop("./data/Danh sách lớp/18CTT1.csv");
+        System.out.println("hello :)");
+        // addSinhVien(new SinhVien("18120201", "Nguyễn Bảo Long", "Nam", "241845617"), "18CTT1");
     }
 }
