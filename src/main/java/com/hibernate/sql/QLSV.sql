@@ -33,6 +33,7 @@ GO
 
 CREATE TABLE MonHoc (
     _maMonHoc BIGINT IDENTITY(1,1),
+    _maMonCuaTruong CHAR(6) UNIQUE,
     _tenMonHoc NVARCHAR(100) UNIQUE,
 
     CONSTRAINT PK_MonHoc PRIMARY KEY(_maMonHoc)
@@ -69,28 +70,61 @@ ALTER TABLE SinhVien_MonHoc ADD CONSTRAINT FK_SinhVienMonHoc_MonHocLopHoc FOREIG
 ALTER TABLE SinhVien_MonHoc ADD CONSTRAINT FK_SinhVienMonHoc_SinhVien FOREIGN KEY (_maSinhVien) REFERENCES SinhVien(_maSinhVien)
 GO
 
+-- kiểm tra 1 lớp học đã tồn tại
+CREATE PROCEDURE check_exists_lopHoc @tenLop VARCHAR(10)
+AS BEGIN 
+    IF (EXISTS (SELECT * FROM LopHoc lh WHERE lh._tenLop = @tenLop))
+        RETURN 1
+    RETURN 0
+END
+GO
+
+-- kiểm tra 1 sinh viên đã tồn tại
+CREATE PROCEDURE check_exists_sinhVien @mssv CHAR(10)
+AS BEGIN 
+    IF (EXISTS (SELECT * FROM SinhVien sv WHERE sv._mssv = @mssv))
+        RETURN 1
+    RETURN 0
+END
+GO
+
+-- kiểm tra 1 môn đã tồn tại
+CREATE PROCEDURE check_exists_monHoc @tenMonHoc NVARCHAR(100)
+AS BEGIN 
+    IF (EXISTS (SELECT * FROM MonHoc mh WHERE mh._tenMonHoc = @tenMonHoc))
+        RETURN 1
+    RETURN 0
+END
+GO
+
+-- tạo môn học từ tên môn học mà mã môn học do trường quy đinh
+-- khi dùng phải kiểm tra trước, xem môn học có tồn tại hay không
+CREATE PROCEDURE create_monHoc @tenMonHoc NVARCHAR(100), @maMonHoc CHAR(6)
+AS BEGIN
+    INSERT MonHoc (_maMonCuaTruong, _tenMonHoc) VALUES (@maMonHoc, @tenMonHoc)
+END
+GO
+
 -- tạo lớp học từ tên lớp được truyền vào
+-- khi dùng phải kiểm tra trước, xem lớp học có tồn tại hay không
 CREATE PROCEDURE create_lopHoc @tenLop VARCHAR(10)
 AS BEGIN
-    IF (NOT EXISTS (SELECT * FROM LopHoc l WHERE l._tenLop = @tenLop)) BEGIN
-        INSERT LopHoc (_tenLop) VALUES (@tenLop)
-    END
+    INSERT LopHoc (_tenLop) VALUES (@tenLop)
 END
 GO
 
 -- yêu cầu 1 - 2: import sinh viên vào 1 lớp
+-- khi dùng phải kiểm tra trước, xem lớp học có tồn tại hay không
 CREATE PROCEDURE Import_SinhVien @mssv CHAR(10), @hoTen NVARCHAR(100), 
                 @gioiTinh NVARCHAR(3), @cmnd CHAR(9), @tenLop VARCHAR(10)
 AS BEGIN
-    IF (EXISTS (SELECT * FROM LopHoc l WHERE l._tenLop = @tenLop)) BEGIN
-        DECLARE @maLop BIGINT
-        SET @maLop = (
-            SELECT l._maLop
-            FROM LopHoc l 
-            WHERE l._tenLop = @tenLop
-        )
-        INSERT SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) VALUES (@mssv, @hoTen, @gioiTinh, @cmnd, @maLop)
-    END
+    DECLARE @maLop BIGINT
+    SET @maLop = (
+        SELECT l._maLop
+        FROM LopHoc l 
+        WHERE l._tenLop = @tenLop
+    )
+    INSERT SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) VALUES (@mssv, @hoTen, @gioiTinh, @cmnd, @maLop)
 END
 GO
 
@@ -100,64 +134,61 @@ GO
 -- yêu cầu 3: import TKB của 1 lớp vào hệ thống
             -- sinh viên thuộc lớp phải xem được tkb (nằm ở yêu cầu 6 và đã xong)
             -- mặc định sinh viên đều học các môn có trong lớp: import sẵn cho sinh viên trong SinhVien_MonHoc luôn
+-- khi dùng phải kiểm tra trước, xem môn học, lớp học có tồn tại hay không
 CREATE PROCEDURE Import_TKB @tenMonHoc NVARCHAR(100), @tenLop VARCHAR(10), @phongHoc VARCHAR(10)
 AS BEGIN
     -- nếu tồn tại tên lớp và tên môn học thì add vào hệ thống
     -- sau đó set mặc định sinh viên thuộc lớp @tenLop phải học môn đó
-    IF (EXISTS(SELECT * FROM LopHoc l WHERE l._tenLop = @tenLop) 
-        AND EXISTS(SELECT * FROM MonHoc mh WHERE mh._tenMonHoc = @tenMonHoc)) 
-    BEGIN
-        -- add lịch học vào hệ thống bằng cách insert data vào MonHoc_LopHoc
-        DECLARE @maLop BIGINT, @maMonHoc BIGINT
-        SET @maLop = (
-            SELECT lh._maLop
-            FROM LopHoc lh
-            WHERE lh._tenLop = @tenLop
-        )
-        SET @maMonHoc = (
-            SELECT mh._maMonHoc
-            FROM MonHoc mh 
-            WHERE mh._tenMonHoc = @tenMonHoc
-        )
-        INSERT MonHoc_LopHoc (_maLop, _maMonHoc, _phongHoc) VALUES (@maLop, @maMonHoc, @phongHoc)
+    -- add lịch học vào hệ thống bằng cách insert data vào MonHoc_LopHoc
+    DECLARE @maLop BIGINT, @maMonHoc BIGINT
+    SET @maLop = (
+        SELECT lh._maLop
+        FROM LopHoc lh
+        WHERE lh._tenLop = @tenLop
+    )
+    SET @maMonHoc = (
+        SELECT mh._maMonHoc
+        FROM MonHoc mh 
+        WHERE mh._tenMonHoc = @tenMonHoc
+    )
+    INSERT MonHoc_LopHoc (_maLop, _maMonHoc, _phongHoc) VALUES (@maLop, @maMonHoc, @phongHoc)
 
-        -- tìm lại mã môn học lớp học vừa được add vào để làm yêu cầu bên dưới
-        DECLARE @maMonHoc_LopHoc BIGINT
-        SET @maMonHoc_LopHoc = (
-            SELECT mh_lh._maMonHoc_LopHoc
-            FROM MonHoc_LopHoc mh_lh
-            WHERE mh_lh._maLop = @maLop
-                AND mh_lh._maMonHoc = @maMonHoc
-        )
+    -- tìm lại mã môn học lớp học vừa được add vào để làm yêu cầu bên dưới
+    DECLARE @maMonHoc_LopHoc BIGINT
+    SET @maMonHoc_LopHoc = (
+        SELECT mh_lh._maMonHoc_LopHoc
+        FROM MonHoc_LopHoc mh_lh
+        WHERE mh_lh._maLop = @maLop
+            AND mh_lh._maMonHoc = @maMonHoc
+    )
 
-        -- sinh viên thuộc @tenLop phải học môn học vừa được add vào 
-        -- khai báo con trỏ trỏ đến _maSinhVien của SinhVien (which has _maLopHoc = @maLop)
-        DECLARE pointerSinhVien CURSOR FOR (
-            SELECT sv._maSinhVien 
-            FROM SinhVien sv 
-            WHERE sv._maLop = @maLop
-        )
+    -- sinh viên thuộc @tenLop phải học môn học vừa được add vào 
+    -- khai báo con trỏ trỏ đến _maSinhVien của SinhVien (which has _maLopHoc = @maLop)
+    DECLARE pointerSinhVien CURSOR FOR (
+        SELECT sv._maSinhVien 
+        FROM SinhVien sv 
+        WHERE sv._maLop = @maLop
+    )
 
-        -- khai báo biến chứa _maSinhVien
-        DECLARE @maSinhVien BIGINT
+    -- khai báo biến chứa _maSinhVien
+    DECLARE @maSinhVien BIGINT
 
-        -- mở con trỏ để làm việc
-        OPEN pointerSinhVien
+    -- mở con trỏ để làm việc
+    OPEN pointerSinhVien
 
-        -- đọc vào 1 dòng 
+    -- đọc vào 1 dòng 
+    FETCH NEXT FROM pointerSinhVien INTO @maSinhVien
+
+    -- loop: chừng nào còn đọc được data thì next con trỏ lên 1 dòng 
+    WHILE @@FETCH_STATUS = 0 BEGIN
+        INSERT SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc) VALUES (@maSinhVien, @maMonHoc_LopHoc)
+        -- i++
         FETCH NEXT FROM pointerSinhVien INTO @maSinhVien
-
-        -- loop: chừng nào còn đọc được data thì next con trỏ lên 1 dòng 
-        WHILE @@FETCH_STATUS = 0 BEGIN
-            INSERT SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc) VALUES (@maSinhVien, @maMonHoc_LopHoc)
-            -- i++
-            FETCH NEXT FROM pointerSinhVien INTO @maSinhVien
-        END
-
-        -- đóng con trỏ và giải phóng nó
-        CLOSE pointerSinhVien
-        DEALLOCATE pointerSinhVien
     END
+
+    -- đóng con trỏ và giải phóng nó
+    CLOSE pointerSinhVien
+    DEALLOCATE pointerSinhVien
 END
 GO
 
@@ -431,18 +462,6 @@ insert SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc, _diemCC, _diemCK, _diemGK
 insert SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc, _diemCC, _diemCK, _diemGK, _diemTong) values (5,2,1,10,1,10)
 go
 */
-
--- -- kiểm tra sự tồn tại của 1 lớp
--- -- truyền vào tên lớp
--- -- trả về 1 nếu tồn tại, 0 nếu không tồn tại
--- CREATE PROCEDURE check_exists_class @tenLop VARCHAR(10)
--- AS BEGIN
---     IF (EXISTS (SELECT * FROM LopHoc l WHERE l._tenLop = @tenLop))
---         RETURN 1
---     ELSE
---         RETURN 0
--- END
--- GO
 
 SELECT * FROM MonHoc
 SELECT * from LopHoc
