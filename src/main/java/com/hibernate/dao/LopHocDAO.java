@@ -7,6 +7,20 @@ import com.hibernate.entity.*;
 import com.hibernate.util.HibernateUtil;
 
 public class LopHocDAO {
+    public static void addLopHoc(String tenLop) {
+        Connection conn = null;
+        try {
+            conn = HibernateUtil.getConnection();
+            // create_lopHoc @tenLop VARCHAR(10)
+            CallableStatement createLopHoc = conn.prepareCall("{Call create_lopHoc(?)}");
+            createLopHoc.setString(1, tenLop);
+            createLopHoc.execute();
+        }
+        catch (SQLException se) {
+            System.err.println("Lỗi ở hàm addLopHoc(String tenLop) file LopHocDAO");
+        }
+    }
+
     public static void addSinhVien(SinhVien sv, String tenLop) {
         Connection conn = null;
         try {
@@ -40,16 +54,16 @@ public class LopHocDAO {
             // sau này khi code giao diện phải throw thêm 
             // để khi lỗi xảy ra còn biết đường mà quăng popup :)
         }
-        finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                }
-                catch (SQLException se) {
-                    System.err.println("Đến đây mà còn lỗi thì chắc toang nặng\nHàm addSinhVien(SinhVien sv, String tenLop) file LopHocDAO");
-                }
-            }
-        }
+        // finally {
+        //     if (conn != null) {
+        //         try {
+        //             conn.close();
+        //         }
+        //         catch (SQLException se) {
+        //             System.err.println("Đến đây mà còn lỗi thì chắc toang nặng\nHàm addSinhVien(SinhVien sv, String tenLop) file LopHocDAO");
+        //         }
+        //     }
+        // }
     }
 
     private static SinhVien readSinhVien(String line) {
@@ -72,20 +86,12 @@ public class LopHocDAO {
             // Import_SinhVien @mssv CHAR(10), @hoTen NVARCHAR(100), @gioiTinh NVARCHAR(3), @cmnd CHAR(9), @tenLop VARCHAR(10)
             CallableStatement importSinhVien = conn.prepareCall("{Call Import_SinhVien(?, ?, ?, ?, ?)}");
 
-            // check if lopHoc exists
-            // check_exists_lopHoc @tenLop VARCHAR(10)
+            // create_lopHoc @tenLop VARCHAR(10)
             String tenLop = br.readLine();
-            CallableStatement checkLopHocExists = conn.prepareCall("{? = Call check_exists_lopHoc(?)}");
-            checkLopHocExists.registerOutParameter(1, Types.INTEGER);
-            checkLopHocExists.setString(2, tenLop);
-            checkLopHocExists.execute();
-            if (checkLopHocExists.getInt(1) == 0) {
-                // create_lopHoc @tenLop VARCHAR(10)
-                CallableStatement createLopHoc = conn.prepareCall("{Call create_lopHoc(?)}");
-                // set _tenLop cho statement1
-                createLopHoc.setString(1, tenLop);
-                createLopHoc.execute();
-            }
+            CallableStatement createLopHoc = conn.prepareCall("{Call create_lopHoc(?)}");
+            // set _tenLop cho statement1
+            createLopHoc.setString(1, tenLop);
+            createLopHoc.execute();
 
             br.readLine();
             while ((line = br.readLine()) != null) {
@@ -108,14 +114,14 @@ public class LopHocDAO {
             System.err.println(ioe);
         }
         finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                }
-                catch (SQLException se) {
-                    System.err.println("Đến đây mà còn lỗi thì chắc toang nặng\nHàm importDanhSachLop(String filename) file LopHocDAO");
-                }
-            }
+            // if (conn != null) {
+            //     try {
+            //         conn.close();
+            //     }
+            //     catch (SQLException se) {
+            //         System.err.println("Đến đây mà còn lỗi thì chắc toang nặng\nHàm importDanhSachLop(String filename) file LopHocDAO");
+            //     }
+            // }
             if (br != null) {
                 try {
                     br.close();
@@ -127,10 +133,31 @@ public class LopHocDAO {
         }
     }
 
+    public static void XemDanhSachLop(String tenLop) {
+        Connection conn = null;
+        try {
+            conn = HibernateUtil.getConnection();
+            // XemDanhSachLop @tenLop VARCHAR(10)
+            CallableStatement xemDanhSach = conn.prepareCall("{Call XemDanhSachLop(?)}");
+            xemDanhSach.setString(1, tenLop);
+
+            ResultSet rs = xemDanhSach.executeQuery();
+            while (rs.next()) {
+                System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4));
+            }
+        }
+        catch (SQLException se) {
+            System.err.println("Lỗi ở hàm XemDanhSachLop(String tenLop) file LopHocDAO");
+        }
+    }
+
     public static void main(String[] args) {
         // addLopHoc("18CTT2");
         importDanhSachLop("./data/Danh sách lớp/18CTT1.csv");
-        addSinhVien(new SinhVien("18120201", "Nguyễn", "Nam", "123456789"), "18CTT1");
+        importDanhSachLop("./data/Danh sách lớp/18CTT2.csv");
+        importDanhSachLop("./data/Danh sách lớp/18CTT3.csv");
+        // XemDanhSachLop("18CTT2");
+        // addSinhVien(new SinhVien("18120201", "Nguyễn", "Nam", "123456789"), "18CTT1");
         System.out.println("hello :)");
         // addSinhVien(new SinhVien("18120201", "Nguyễn Bảo Long", "Nam", "241845617"), "18CTT1");
     }
