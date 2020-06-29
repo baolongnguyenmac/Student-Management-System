@@ -1,37 +1,40 @@
 package com.hibernate.dao;
 
-import com.hibernate.entity.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import com.hibernate.util.HibernateUtil;
 
-import org.hibernate.*;
-
 public class MonHocDAO {
-    public static void addMonHoc(String tenMonHoc) {
-        Session session = null;
+    public static void addMonHoc(String tenMonHoc, String maMonHoc) {
+        Connection conn = null;
         try {
-            session = HibernateUtil.getSessionJavaConfigFactory().openSession();
-            session.beginTransaction();
+            conn = HibernateUtil.getConnection();
 
             // do something here
-            MonHoc mh = new MonHoc(tenMonHoc);
-            session.save(mh);
-
-            session.flush();
-            session.getTransaction().commit();
-            session.clear();
+            // create_monHoc @tenMonHoc NVARCHAR(100), @maMonHoc CHAR(6)
+            CallableStatement addMon = conn.prepareCall("{Call create_monHoc(?, ?)}");
+            addMon.setString(1, tenMonHoc);
+            addMon.setString(2, maMonHoc);
+            addMon.execute();
         }
-        catch (HibernateException he) {
-            session.getTransaction().rollback();
-            System.err.println("Lỗi ở hàm addMonHoc(String tenMonHoc) file MonHocDAO");
+        catch (SQLException he) {
+            System.err.println("Lỗi ở hàm addMonHoc(String tenMonHoc, String maMonHoc) file MonHocDAO");
         }
-        finally {
-            if (session != null) {
-                session.close();
-            }
-        }
+        // finally {
+        //     if (conn != null) {
+        //         try {
+        //             conn.close();
+        //         }
+        //         catch (SQLException se) {
+        //             System.err.println("Đến đây mà còn lỗi thì chắc toang nặng\nHàm addMonHoc(String tenMonHoc, String maMonHoc) file MonHocDAO");
+        //         }
+        //     }
+        // }
     }
     public static void main(String[] args) {
-        addMonHoc("Lập trình hướng đối tượng");
-        addMonHoc("Cơ sở dữ liệu");
+        addMonHoc("Lập trình hướng đối tượng", "CTT001");
+        addMonHoc("Cơ sở dữ liệu", "CTT002");
     }
 }
