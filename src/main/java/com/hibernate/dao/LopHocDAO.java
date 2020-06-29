@@ -13,22 +13,29 @@ public class LopHocDAO {
             conn = HibernateUtil.getConnection();
 
             // do something here
-            CallableStatement statement = conn.prepareCall("{Call Import_SinhVien(?, ?, ?, ?, ?)}");
-            statement.setString(1, sv.get_mssv());
-            statement.setString(2, sv.get_hoTen());
-            statement.setString(3, sv.getGioiTinh());
-            statement.setString(4, sv.get_cmnd());
-            statement.setString(5, tenLop);
+            // check if lopHoc exists
+            // check_exists_lopHoc @tenLop VARCHAR(10)
+            CallableStatement checkLopHocExists = conn.prepareCall("{? = Call check_exists_lopHoc(?)}");
+            checkLopHocExists.registerOutParameter(1, Types.INTEGER);
+            checkLopHocExists.setString(2, tenLop);
+            checkLopHocExists.execute();
+            if (checkLopHocExists.getInt(1) == 1) {
+                // Import_SinhVien @mssv CHAR(10), @hoTen NVARCHAR(100), @gioiTinh NVARCHAR(3), @cmnd CHAR(9), @tenLop VARCHAR(10)
+                CallableStatement statement = conn.prepareCall("{Call Import_SinhVien(?, ?, ?, ?, ?)}");
+                statement.setString(1, sv.get_mssv());
+                statement.setString(2, sv.get_hoTen());
+                statement.setString(3, sv.getGioiTinh());
+                statement.setString(4, sv.get_cmnd());
+                statement.setString(5, tenLop);
 
-            statement.execute();
+                statement.execute();
+            }
+            else {
+                // không có tenLop trong hệ thống 
+                // throw gì đó để giao diện biết được và hiển thị popup
+            }
         }
         catch (SQLException se) {
-            try {
-                conn.rollback();
-            }
-            catch (SQLException see) {
-                System.err.println("Lỗi part 2 ở hàm addSinhVien(SinhVien sv, String tenLop) file LopHocDAO");
-            }
             System.err.println("Lỗi ở hàm addSinhVien(SinhVien sv, String tenLop) file LopHocDAO");
             // sau này khi code giao diện phải throw thêm 
             // để khi lỗi xảy ra còn biết đường mà quăng popup :)
@@ -62,32 +69,38 @@ public class LopHocDAO {
             br = new BufferedReader(new FileReader(filename));
 
             // do something here
-            CallableStatement statement = conn.prepareCall("{Call Import_SinhVien(?, ?, ?, ?, ?)}");
-            CallableStatement statement1 = conn.prepareCall("{Call create_lopHoc(?)}");
+            // Import_SinhVien @mssv CHAR(10), @hoTen NVARCHAR(100), @gioiTinh NVARCHAR(3), @cmnd CHAR(9), @tenLop VARCHAR(10)
+            CallableStatement importSinhVien = conn.prepareCall("{Call Import_SinhVien(?, ?, ?, ?, ?)}");
+
+            // check if lopHoc exists
+            // check_exists_lopHoc @tenLop VARCHAR(10)
             String tenLop = br.readLine();
-            // set _tenLop cho statement1
-            statement1.setString(1, tenLop);
-            statement1.execute();
+            CallableStatement checkLopHocExists = conn.prepareCall("{? = Call check_exists_lopHoc(?)}");
+            checkLopHocExists.registerOutParameter(1, Types.INTEGER);
+            checkLopHocExists.setString(2, tenLop);
+            checkLopHocExists.execute();
+            if (checkLopHocExists.getInt(1) == 0) {
+                // create_lopHoc @tenLop VARCHAR(10)
+                CallableStatement createLopHoc = conn.prepareCall("{Call create_lopHoc(?)}");
+                // set _tenLop cho statement1
+                createLopHoc.setString(1, tenLop);
+                createLopHoc.execute();
+            }
 
             br.readLine();
             while ((line = br.readLine()) != null) {
                 SinhVien sv = readSinhVien(line);
-                statement.setString(1, sv.get_mssv());
-                statement.setString(2, sv.get_hoTen());
-                statement.setString(3, sv.getGioiTinh());
-                statement.setString(4, sv.get_cmnd());
-                statement.setString(5, tenLop);
-                statement.execute();
+                importSinhVien.setString(1, sv.get_mssv());
+                importSinhVien.setString(2, sv.get_hoTen());
+                importSinhVien.setString(3, sv.getGioiTinh());
+                importSinhVien.setString(4, sv.get_cmnd());
+                importSinhVien.setString(5, tenLop);
+                importSinhVien.execute();
             }
         }
         catch (SQLException se) {
-            try {
-                conn.rollback();
-            }
-            catch (SQLException see) {
-                System.err.println("Lỗi part 2 ở hàm importDanhSachLop(String filename) file LopHocDAO");
-            }
-            System.err.println("Lỗi ở hàm importDanhSachLop(String filename) file LopHocDAO");
+            // System.err.println("Lỗi ở hàm importDanhSachLop(String filename) file LopHocDAO");
+            System.err.println(se);
             // sau này khi code giao diện phải throw thêm 
             // để khi lỗi xảy ra còn biết đường mà quăng popup :)
         }
@@ -117,6 +130,7 @@ public class LopHocDAO {
     public static void main(String[] args) {
         // addLopHoc("18CTT2");
         importDanhSachLop("./data/Danh sách lớp/18CTT1.csv");
+        addSinhVien(new SinhVien("18120201", "Nguyễn", "Nam", "123456789"), "18CTT1");
         System.out.println("hello :)");
         // addSinhVien(new SinhVien("18120201", "Nguyễn Bảo Long", "Nam", "241845617"), "18CTT1");
     }
