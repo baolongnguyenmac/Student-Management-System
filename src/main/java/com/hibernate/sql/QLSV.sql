@@ -33,7 +33,7 @@ GO
 
 CREATE TABLE MonHoc (
     _maMonHoc BIGINT IDENTITY(1,1),
-    _maMonCuaTruong CHAR(6) UNIQUE,
+    _maMonCuaTruong CHAR(6) UNIQUE NOT NULL,
     _tenMonHoc NVARCHAR(100) UNIQUE,
 
     CONSTRAINT PK_MonHoc PRIMARY KEY(_maMonHoc)
@@ -101,7 +101,10 @@ GO
 -- khi dùng phải kiểm tra trước, xem môn học có tồn tại hay không
 CREATE PROCEDURE create_monHoc @tenMonHoc NVARCHAR(100), @maMonHoc CHAR(6)
 AS BEGIN
-    INSERT MonHoc (_maMonCuaTruong, _tenMonHoc) VALUES (@maMonHoc, @tenMonHoc)
+    DECLARE @bool INT
+    EXEC @bool = check_exists_monHoc @tenMonHoc
+    IF (@bool = 0)
+        INSERT MonHoc (_maMonCuaTruong, _tenMonHoc) VALUES (@maMonHoc, @tenMonHoc)
 END
 GO
 
@@ -109,7 +112,10 @@ GO
 -- khi dùng phải kiểm tra trước, xem lớp học có tồn tại hay không
 CREATE PROCEDURE create_lopHoc @tenLop VARCHAR(10)
 AS BEGIN
-    INSERT LopHoc (_tenLop) VALUES (@tenLop)
+    DECLARE @bool INT
+    EXEC @bool = check_exists_lopHoc @tenLop
+    IF (@bool = 0)
+        INSERT LopHoc (_tenLop) VALUES (@tenLop)
 END
 GO
 
@@ -196,12 +202,34 @@ GO
 -- EXEC Import_TKB N'Cơ sở dữ liệu', '18CTT2', 'E3'
 -- GO
 
+-- kiểm tra xem nếu sinh viên đang học hoặc không học môn học
+CREATE PROCEDURE check_SinhVien_MonHoc @mssv CHAR(10), @tenMonHoc NVARCHAR(100)
+AS BEGIN 
+    IF (EXISTS (
+            SELECT * 
+            FROM SinhVien sv, SinhVien_MonHoc sv_mh, MonHoc_LopHoc mh_lh, MonHoc mh 
+            WHERE sv._mssv = @mssv AND sv._maSinhVien = sv_mh._maSinhVien
+                AND sv_mh._maMonHoc_LopHoc = mh_lh._maMonHoc_LopHoc
+                AND mh_lh._maMonHoc = mh._maMonHoc
+                AND mh._tenMonHoc = @tenMonHoc
+        )
+    ) BEGIN 
+        RETURN 1
+    END
+
+    RETURN 0
+END
+GO
+
 -- yêu cầu 4.1: Sinh viên A xin học môn B
-CREATE PROCEDURE DangKyMonHoc @mssv CHAR(10), @tenMonHoc NVARCHAR(100)
+CREATE PROCEDURE DangKyMonHoc @mssv CHAR(10), @tenMonHoc NVARCHAR(100), @tenLop VARCHAR(10)
 AS BEGIN
     -- phải tồn tại sinh viên A và môn học B trong hệ thống
-    IF (EXISTS (SELECT * FROM SinhVien sv WHERE sv._mssv = @mssv)
-        AND EXISTS (SELECT * FROM MonHoc mh WHERE mh._tenMonHoc = @tenMonHoc))
+    DECLARE @boolSV INT, @boolMonHoc INT, @boolLopHoc INT
+    EXEC @boolSV = check_exists_sinhVien @mssv
+    EXEC @boolMonHoc = check_exists_monHoc @tenMonHoc
+    EXEC @boolLopHoc = check_exists_lopHoc @tenLop
+    IF (@boolLopHoc = 1 AND @boolMonHoc = 1 AND @boolSV = 1)
     BEGIN
         -- tìm _maSinhVien của A và _maMonHoc của B
         DECLARE @maSinhVien BIGINT, @maMonHoc BIGINT
@@ -216,21 +244,34 @@ AS BEGIN
             WHERE mh._tenMonHoc = @tenMonHoc
         )
 
-        -- tìm _maMonHoc_LopHoc để add vào bảng SinhVien_MonHoc
-        -- có thể hiểu là đang tìm lịch học môn B cho A
-        DECLARE @maMonHoc_LopHoc BIGINT
-        SET @maMonHoc_LopHoc = (
-            SELECT TOP 1 mh_lh._maMonHoc_LopHoc
-            FROM MonHoc_LopHoc mh_lh
-            WHERE mh_lh._maMonHoc = @maMonHoc
-        )
+        -- Nếu A đang học môn B thì dẹp, ngược lại, insert data để A học môn B
+        DECLARE @boolSinhVien_MonHoc INT
+        EXEC @boolSinhVien_MonHoc = check_SinhVien_MonHoc @mssv, @tenMonHoc
+        IF (@boolSinhVien_MonHoc = 0) BEGIN
+            DECLARE @maLop BIGINT
+            SET @maLop = (
+                SELECT lh._maLop
+                FROM LopHoc lh 
+                WHERE lh._tenLop = @tenLop
+            )
 
-        INSERT SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc) VALUES (@maSinhVien, @maMonHoc_LopHoc)
+            -- tìm _maMonHoc_LopHoc để add vào bảng SinhVien_MonHoc
+            -- có thể hiểu là đang tìm lịch học môn B cho A
+            DECLARE @maMonHoc_LopHoc BIGINT
+            SET @maMonHoc_LopHoc = (
+                SELECT mh_lh._maMonHoc_LopHoc
+                FROM MonHoc_LopHoc mh_lh
+                WHERE mh_lh._maMonHoc = @maMonHoc
+                    AND mh_lh._maLop = @maLop
+            )
+
+            INSERT SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc) VALUES (@maSinhVien, @maMonHoc_LopHoc)
+        END
     END
 END
 GO
 
--- EXEC DangKyMonHoc '18120201', N'Cơ sở dữ liệu'
+-- EXEC DangKyMonHoc '18120201', N'Cơ sở dữ liệu', '18CTT1'
 -- GO
 
 -- yêu cầu 4.2: Sinh viên C không học môn D
@@ -238,30 +279,26 @@ CREATE PROCEDURE HuyBoMonHoc @mssv CHAR(10), @tenMonHoc NVARCHAR(100)
 AS BEGIN
     -- phải tồn tại sinh viên C, môn D trong hệ thống
     -- phải đảm bảo là C đang học môn D. Do đó mới xin thôi học được
-    IF (EXISTS (SELECT * FROM SinhVien sv WHERE sv._mssv = @mssv)
-        AND EXISTS (SELECT * FROM MonHoc mh WHERE mh._tenMonHoc = @tenMonHoc)
-        AND EXISTS (
-            SELECT * 
-            FROM SinhVien sv, SinhVien_MonHoc sv_mh, MonHoc_LopHoc mh_lh, MonHoc mh 
-            WHERE sv._mssv = @mssv AND sv._maSinhVien = sv_mh._maSinhVien
-                AND sv_mh._maMonHoc_LopHoc = mh_lh._maMonHoc_LopHoc
-                AND mh_lh._maMonHoc = mh._maMonHoc
-                AND mh._tenMonHoc = @tenMonHoc
-        )
-    )
-    BEGIN
-        -- tìm ra _maSinhVien_MonHoc: which illustrates that student C joins subject D
-        DECLARE @maSinhVien_MonHoc BIGINT
-        SET @maSinhVien_MonHoc = (
-            SELECT sv_mh._maSinhVien_MonHoc
-            FROM SinhVien sv, SinhVien_MonHoc sv_mh, MonHoc_LopHoc mh_lh, MonHoc mh 
-            WHERE sv._mssv = @mssv AND sv._maSinhVien = sv_mh._maSinhVien
-                AND sv_mh._maMonHoc_LopHoc = mh_lh._maMonHoc_LopHoc
-                AND mh_lh._maMonHoc = mh._maMonHoc
-                AND mh._tenMonHoc = @tenMonHoc
-        )
+    DECLARE @boolSinhVien INT, @boolMonHoc INT
+    EXEC @boolSinhVien = check_exists_sinhVien @mssv
+    EXEC @boolMonHoc = check_exists_monHoc @tenMonHoc
+    IF (@boolSinhVien = 1 AND @boolMonHoc = 1) BEGIN 
+        DECLARE @boolSinhVien_MonHoc INT
+        EXEC @boolSinhVien_MonHoc = check_SinhVien_MonHoc @mssv, @tenMonHoc
+        IF (@boolSinhVien_MonHoc = 1) BEGIN 
+            -- tìm ra _maSinhVien_MonHoc: which illustrates that student C joins subject D
+            DECLARE @maSinhVien_MonHoc BIGINT
+            SET @maSinhVien_MonHoc = (
+                SELECT sv_mh._maSinhVien_MonHoc
+                FROM SinhVien sv, SinhVien_MonHoc sv_mh, MonHoc_LopHoc mh_lh, MonHoc mh 
+                WHERE sv._mssv = @mssv AND sv._maSinhVien = sv_mh._maSinhVien
+                    AND sv_mh._maMonHoc_LopHoc = mh_lh._maMonHoc_LopHoc
+                    AND mh_lh._maMonHoc = mh._maMonHoc
+                    AND mh._tenMonHoc = @tenMonHoc
+            )
 
-        DELETE FROM SinhVien_MonHoc WHERE _maSinhVien_MonHoc = @maSinhVien_MonHoc
+            DELETE FROM SinhVien_MonHoc WHERE _maSinhVien_MonHoc = @maSinhVien_MonHoc
+        END
     END
 END
 GO
@@ -285,7 +322,7 @@ GO
 -- yêu cầu 6.1: xem TKB phía sinh viên
 CREATE PROCEDURE XemTKB_SinhVien @mssv CHAR(10)
 AS BEGIN
-    SELECT mh._tenMonHoc, mh_lh._phongHoc
+    SELECT mh._maMonCuaTruong, mh._tenMonHoc, mh_lh._phongHoc
     FROM MonHoc mh, MonHoc_LopHoc mh_lh, SinhVien_MonHoc sv_mh, SinhVien sv
     WHERE sv_mh._maSinhVien = sv._maSinhVien AND sv._mssv = @mssv
         AND sv_mh._maMonHoc_LopHoc = mh_lh._maMonHoc_LopHoc
@@ -299,7 +336,7 @@ GO
 -- yêu cầu 6.2: xem TKB theo lớp của giáo vụ
 CREATE PROCEDURE XemTKB_LopHoc @tenLop VARCHAR(10)
 AS BEGIN
-    SELECT mh._tenMonHoc, mh_lh._phongHoc
+    SELECT mh._maMonCuaTruong, mh._tenMonHoc, mh_lh._phongHoc
     FROM MonHoc mh, MonHoc_LopHoc mh_lh, LopHoc lh
     WHERE mh._maMonHoc = mh_lh._maMonHoc
         AND lh._maLop = mh_lh._maLop
@@ -421,8 +458,8 @@ insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('18120662', N'
 insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('10000000', N'Đặng Thị Hồng Suyên', N'Nữ', '241845621', 3)
 go
 
-insert MonHoc (_tenMonHoc) values (N'Lập trình hướng đối tượng')
-insert MonHoc (_tenMonHoc) values (N'Cơ sở dữ liệu')
+insert MonHoc (_maMonCuaTruong, _tenMonHoc) values ('CTT001', N'Lập trình hướng đối tượng')
+insert MonHoc (_maMonCuaTruong, _tenMonHoc) values ('CTT002', N'Cơ sở dữ liệu')
 go 
 
 /* -- insert data for testing
