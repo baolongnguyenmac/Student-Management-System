@@ -1,39 +1,53 @@
 package com.hibernate.dao;
 
-import com.hibernate.entity.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import com.hibernate.util.HibernateUtil;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
 public class SinhVien_MonHocDAO {
-    public static void add() {
-        SessionFactory sessionFactory = HibernateUtil.getSessionJavaConfigFactory();
-        Session session = null;
-        MonHoc_LopHoc mh_lh = null;
-        SinhVien sv = null;
-        SinhVien_MonHoc sv_mh = new SinhVien_MonHoc(10.0f, 0.1f, 5.0f, 4.0f);
-
+    public static void XemTKB_SinhVien(String mssv) {
+        Connection conn = null;
         try {
-            session = sessionFactory.openSession();
-            session.beginTransaction();
+            conn = HibernateUtil.getConnection();
+            // XemTKB_SinhVien @mssv CHAR(10)
+            CallableStatement xemTKB_SinhVien = conn.prepareCall("{Call XemTKB_SinhVien(?)}");
+            xemTKB_SinhVien.setString(1, mssv);
 
-            sv = session.createQuery("from SinhVien sv where sv._mssv = '18120201'", SinhVien.class).getSingleResult();
-            mh_lh = session.createQuery("from MonHoc_LopHoc", MonHoc_LopHoc.class).getResultList().get(0);
-
-            sv.addSinhVien_MonHoc(sv_mh);
-            mh_lh.addSinhVien_MonHoc(sv_mh);
-
-            session.save(sv_mh);
-
-            session.getTransaction().commit();
+            ResultSet rs = xemTKB_SinhVien.executeQuery();
+            while (rs.next()) {
+                System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
+            }
         }
-        catch (Exception e) {
-            session.getTransaction().rollback();
-            System.out.println("ăn lồn ở file SinhVien_MonHocDAO");
+        catch (SQLException se) {
+            System.err.println("Lỗi ở hàm XemTKB_SinhVien(String mssv) file SinhVien_MonHocDAO");
+            // System.err.println(se);
         }
     }
+
+    public static void XemTKB_LopHoc(String tenLopHoc) {
+        Connection conn = null;
+        try {
+            conn = HibernateUtil.getConnection();
+            // XemTKB_LopHoc @tenLop VARCHAR(10)
+            CallableStatement xemTKB_LopHoc = conn.prepareCall("{Call XemTKB_LopHoc(?)}");
+            xemTKB_LopHoc.setString(1, tenLopHoc);
+
+            ResultSet rs = xemTKB_LopHoc.executeQuery();
+            while (rs.next()) {
+                System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
+            }
+        }
+        catch (SQLException se) {
+            System.err.println("Lỗi ở hàm XemTKB_LopHoc(String tenLopHoc) file SinhVien_MonHocDAO");
+            // System.err.println(se);
+        }
+    }
+
     public static void main(String[] args) {
-        add();
+        // XemTKB_SinhVien("18120201");
+        XemTKB_LopHoc("18CTT2");
     }
 }
