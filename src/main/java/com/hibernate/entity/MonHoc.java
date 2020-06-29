@@ -15,6 +15,9 @@ public class MonHoc {
     @Column (name = "_tenMonHoc")
     private String _tenMonHoc;
 
+    @Column (name = "_maMonCuaTruong")
+    private String _maMonCuaTruong;
+
     // liên kết với 1 biến bên class MonHoc_LopHoc tên là private MonHoc _monHoc
     @OneToMany (mappedBy = "_monHoc")
     private List<MonHoc_LopHoc> _listMonHoc_LopHoc = new ArrayList<MonHoc_LopHoc>();
@@ -22,8 +25,9 @@ public class MonHoc {
     public MonHoc() {
     }
 
-    public MonHoc(String _tenMonHoc) {
+    public MonHoc(String _tenMonHoc, String _maMonCuaTruong) {
         this._tenMonHoc = _tenMonHoc;
+        this._maMonCuaTruong = _maMonCuaTruong;
     }
 
     public long get_maMonHoc() {
@@ -53,5 +57,13 @@ public class MonHoc {
     public void addMonHoc_LopHoc(MonHoc_LopHoc mh_lh) {
         mh_lh.set_monHoc(this);
         _listMonHoc_LopHoc.add(mh_lh);
+    }
+
+    public String get_maMonCuaTruong() {
+        return _maMonCuaTruong;
+    }
+
+    public void set_maMonCuaTruong(String _maMonCuaTruong) {
+        this._maMonCuaTruong = _maMonCuaTruong;
     }
 }
