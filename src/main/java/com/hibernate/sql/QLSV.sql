@@ -388,13 +388,14 @@ GO
 */
 
 -- yêu cầu 8: Xem bảng điểm theo môn học cho giáo vụ
-CREATE PROCEDURE XemDiem_GiaoVu @tenMonHoc NVARCHAR(100)
+CREATE PROCEDURE XemDiem_GiaoVu @tenMonHoc NVARCHAR(100), @tenLop VARCHAR(10)
 AS BEGIN
     SELECT sv._mssv, sv._hoTen, mh._tenMonHoc, sv_mh._diemCC, sv_mh._diemGK, sv_mh._diemCK, sv_mh._diemTong
-    FROM SinhVien_MonHoc sv_mh, SinhVien sv, MonHoc mh, MonHoc_LopHoc mh_lh
+    FROM SinhVien_MonHoc sv_mh, SinhVien sv, MonHoc mh, MonHoc_LopHoc mh_lh, LopHoc lh
     WHERE sv._maSinhVien = sv_mh._maSinhVien 
         AND sv_mh._maMonHoc_LopHoc = mh_lh._maMonHoc_LopHoc
         AND mh_lh._maMonHoc = mh._maMonHoc AND mh._tenMonHoc = @tenMonHoc
+        AND mh_lh._maLop = lh._maLop AND lh._tenLop = @tenLop
 END
 GO
 
@@ -402,35 +403,35 @@ GO
 -- GO
 
 -- yêu cầu 9: Sửa điểm sinh viên 
-CREATE PROCEDURE UpdateDiemSinhVien @mssv CHAR(10), @tenMonHoc NVARCHAR(100), @diemCC FLOAT, @diemGK FLOAT, @diemCK FLOAT, @diemTong FLOAT
+ALTER PROCEDURE UpdateDiemSinhVien @mssv CHAR(10), @tenMonHoc NVARCHAR(100), @diemCC FLOAT, @diemGK FLOAT, @diemCK FLOAT, @diemTong FLOAT
 AS BEGIN 
     -- phải tồn tại sinh viên, môn học trong hệ thống
     -- phải thoả mãn sinh viên đó có học môn học đó 
-    IF (EXISTS (SELECT * FROM SinhVien sv WHERE sv._mssv = @mssv)
-        AND EXISTS (SELECT * FROM MonHoc mh WHERE mh._tenMonHoc = @tenMonHoc)
-        AND EXISTS (
-            SELECT * 
-            FROM SinhVien sv, SinhVien_MonHoc sv_mh, MonHoc_LopHoc mh_lh, MonHoc mh 
-            WHERE sv._mssv = @mssv AND sv._maSinhVien = sv_mh._maSinhVien
-                AND sv_mh._maMonHoc_LopHoc = mh_lh._maMonHoc_LopHoc
-                AND mh_lh._maMonHoc = mh._maMonHoc 
-                AND mh._tenMonHoc = @tenMonHoc
-        ))
-    BEGIN 
-        DECLARE @maSinhVien_MonHoc BIGINT
-        SET @maSinhVien_MonHoc = (
-            SELECT sv_mh._maSinhVien_MonHoc
-            FROM SinhVien sv, SinhVien_MonHoc sv_mh, MonHoc_LopHoc mh_lh, MonHoc mh 
-            WHERE sv._mssv = @mssv AND sv._maSinhVien = sv_mh._maSinhVien
-                AND sv_mh._maMonHoc_LopHoc = mh_lh._maMonHoc_LopHoc
-                AND mh_lh._maMonHoc = mh._maMonHoc 
-                AND mh._tenMonHoc = @tenMonHoc
-        )
+    DECLARE @boolSinhVien INT, @boolMonHoc INT
+    EXEC @boolMonHoc = check_exists_monHoc @tenMonHoc
+    EXEC @boolSinhVien = check_exists_sinhVien @mssv
+    IF (@boolSinhVien = 1 AND @boolMonHoc = 1) BEGIN 
+        DECLARE @boolSinhVien_MonHoc INT 
+        EXEC @boolSinhVien_MonHoc = check_SinhVien_MonHoc @mssv, @tenMonHoc
+        IF (@boolSinhVien_MonHoc = 1) BEGIN 
+            DECLARE @maSinhVien_MonHoc BIGINT
+            SET @maSinhVien_MonHoc = (
+                SELECT sv_mh._maSinhVien_MonHoc
+                FROM SinhVien sv, SinhVien_MonHoc sv_mh, MonHoc_LopHoc mh_lh, MonHoc mh 
+                WHERE sv._mssv = @mssv AND sv._maSinhVien = sv_mh._maSinhVien
+                    AND sv_mh._maMonHoc_LopHoc = mh_lh._maMonHoc_LopHoc
+                    AND mh_lh._maMonHoc = mh._maMonHoc 
+                    AND mh._tenMonHoc = @tenMonHoc
+            )
 
-        UPDATE SinhVien_MonHoc SET _diemCC = @diemCC, _diemCK = @diemCK, _diemGK = @diemGK, _diemTong = @diemTong WHERE _maSinhVien_MonHoc = @maSinhVien_MonHoc
+            UPDATE SinhVien_MonHoc SET _diemCC = @diemCC, _diemCK = @diemCK, _diemGK = @diemGK, _diemTong = @diemTong WHERE _maSinhVien_MonHoc = @maSinhVien_MonHoc
+        END
     END
 END
 GO
+
+-- EXEC UpdateDiemSinhVien '18120211', N'Lập trình hướng đối tượng', 5.5, 5.5, 5.5, 5.5
+-- GO
 
 -- yêu cầu 10: Xem bảng điểm cho sinh viên
 CREATE PROCEDURE XemDiem_SinhVien @mssv CHAR(10)
