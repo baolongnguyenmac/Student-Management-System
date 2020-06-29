@@ -1,5 +1,7 @@
 package com.hibernate.util;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.Properties;
 
 import com.hibernate.entity.*;
@@ -11,7 +13,22 @@ import org.hibernate.service.ServiceRegistry;
 
 public class HibernateUtil {
     // Property based configuration
-    private static SessionFactory sessionJavaConfigFactory;
+    private static SessionFactory sessionJavaConfigFactory = null;
+
+    // Connection for calling stored procedure
+    private static Connection connection = null;
+
+    private static Connection buildConnection() {
+        try {
+            Connection c = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=QLSV", "sa", "Long123ohio");
+            return c;
+        }
+        catch (Throwable ex) {
+            // System.err.println("Initial Connection failed." + ex);
+            System.err.println("Lỗi ở hàm buildConnection file HibernateUtil");
+            throw new ExceptionInInitializerError(ex);
+        }
+    }
 
     private static SessionFactory buildSessionJavaConfigFactory() {
         try {
@@ -59,4 +76,10 @@ public class HibernateUtil {
         return sessionJavaConfigFactory;
     }
 
+    public static Connection getConnection() {
+        if (connection == null) {
+            connection = buildConnection();
+        }
+        return connection;
+    }
 }
