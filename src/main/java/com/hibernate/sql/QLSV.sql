@@ -121,8 +121,7 @@ GO
 
 -- yêu cầu 1 - 2: import sinh viên vào 1 lớp
 -- khi dùng phải kiểm tra trước, xem lớp học có tồn tại hay không
-CREATE PROCEDURE Import_SinhVien @mssv CHAR(10), @hoTen NVARCHAR(100), 
-                @gioiTinh NVARCHAR(3), @cmnd CHAR(9), @tenLop VARCHAR(10)
+CREATE PROCEDURE Import_SinhVien @mssv CHAR(10), @hoTen NVARCHAR(100), @gioiTinh NVARCHAR(3), @cmnd CHAR(9), @tenLop VARCHAR(10)
 AS BEGIN
     DECLARE @maLop BIGINT
     SET @maLop = (
@@ -131,6 +130,42 @@ AS BEGIN
         WHERE l._tenLop = @tenLop
     )
     INSERT SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) VALUES (@mssv, @hoTen, @gioiTinh, @cmnd, @maLop)
+
+    -- sinh viên thuộc @maLop phải học môn học của lớp 
+    -- khai báo con trỏ trỏ đến _maMonHoc_LopHoc của MonHoc_LopHoc (which has _maLopHoc = @maLop)
+    DECLARE pointerMonHoc_LopHoc CURSOR FOR (
+        SELECT mh_lh._maMonHoc_LopHoc
+        FROM MonHoc_LopHoc mh_lh
+        WHERE mh_lh._maLop = @maLop
+    )
+
+    -- khai báo biến chứa _maMonHoc_LopHoc 
+    DECLARE @maMonHoc_LopHoc BIGINT
+
+    -- mở con trỏ để làm việc 
+    OPEN pointerMonHoc_LopHoc
+
+    -- đọc vào 1 dòng
+    FETCH NEXT FROM pointerMonHoc_LopHoc INTO @maMonHoc_LopHoc
+
+    -- tìm lại _maSinhVien của sv vừa add vào
+    DECLARE @maSinhVien BIGINT
+    SET @maSinhVien = (
+        SELECT sv._maSinhVien
+        FROM SinhVien sv 
+        WHERE sv._mssv = @mssv
+    )
+
+    -- loop
+    WHILE @@FETCH_STATUS = 0 BEGIN 
+        INSERT SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc) VALUES (@maSinhVien, @maMonHoc_LopHoc)
+        -- i++
+        FETCH NEXT FROM pointerMonHoc_LopHoc INTO @maMonHoc_LopHoc
+    END
+
+    -- đóng con trỏ + giải phóng
+    CLOSE pointerMonHoc_LopHoc
+    DEALLOCATE pointerMonHoc_LopHoc
 END
 GO
 
@@ -347,45 +382,30 @@ GO
 -- EXEC XemTKB_LopHoc '18CTT2'
 -- GO
 
-/* -- không truyền 1 bảng vào đây được :) 
--- yêu cầu 7: import bảng điểm cho từng lớp
--- ý tưởng: tìm ra lớp và môn cần import 
---          sau đó tìm ra MonHoc_LopHoc 
---          -> tìm được SinhVien_MonHoc thông qua _maMonHoc_LopHoc
-CREATE PROCEDURE ImportBangDiem @tenLop VARCHAR(10), @tenMonHoc NVARCHAR(100), @diemCC FLOAT, @diemGK FLOAT, @diemCK FLOAT, @diemTong FLOAT
-AS BEGIN 
-    IF (EXISTS (SELECT * FROM LopHoc lh WHERE lh._tenLop = @tenLop)
-        AND EXISTS (SELECT * FROM MonHoc mh WHERE mh._tenMonHoc = @tenMonHoc))
-    BEGIN 
-        DECLARE @maLop BIGINT, @maMonHoc BIGINT, @maMonHoc_LopHoc BIGINT
-        SET @maLop = (
-            SELECT lh._maLop
-            FROM LopHoc lh 
-            WHERE lh._tenLop = @tenLop
-        )
-        SET @maMonHoc = (
-            SELECT mh._maMonHoc
-            FROM MonHoc mh 
-            WHERE mh._tenMonHoc = @tenMonHoc
-        )
-        SET @maMonHoc_LopHoc = (
-            SELECT mh_lh._maMonHoc_LopHoc
-            FROM MonHoc_LopHoc mh_lh 
-            WHERE mh_lh._maMonHoc = @maMonHoc
-                AND mh_lh._maLop = @maLop
-        )
-        -- đang lag đoạn này nha :)
-        UPDATE SinhVien_MonHoc 
-        SET _diemCC = @diemCC, 
-            _diemCK = @diemCK, 
-            _diemGK = @diemGK, 
-            _diemTong = @diemTong 
-        WHERE _maMonHoc_LopHoc = @maMonHoc_LopHoc 
-            AND _maSinhVien = 
-    END
+-- yêu cầu 7: import bảng điểm theo lớp + môn học (kèm theo mssv và điểm)
+CREATE PROCEDURE ImportBangDiem @tenLop VARCHAR(10), @tenMonHoc NVARCHAR(100), @mssv CHAR(10), @diemCC FLOAT, @diemGK FLOAT, @diemCK FLOAT, @diemTong FLOAT
+AS BEGIN
+    DECLARE @maSinhVien BIGINT, @maMonHoc_LopHoc BIGINT
+    SET @maSinhVien = (
+        SELECT sv._maSinhVien
+        FROM SinhVien sv 
+        WHERE sv._mssv = @mssv
+    )
+    SET @maMonHoc_LopHoc = (
+        SELECT mh_lh._maMonHoc_LopHoc
+        FROM MonHoc_LopHoc mh_lh, LopHoc lh, MonHoc mh 
+        WHERE mh_lh._maLop = lh._maLop AND lh._tenLop = @tenLop
+            AND mh_lh._maMonHoc = mh._maMonHoc AND mh._tenMonHoc = @tenMonHoc
+    )
+
+    UPDATE SinhVien_MonHoc 
+    SET _diemCC = @diemCC, _diemCK = @diemCK, _diemGK = @diemGK, _diemTong = @diemTong 
+    WHERE _maSinhVien = @maSinhVien AND _maMonHoc_LopHoc = @maMonHoc_LopHoc
 END
 GO
-*/
+
+-- EXEC ImportBangDiem '18CTT1', N'Cơ cở dữ liệu', '18120201', 5,5,5,5
+-- GO
 
 -- yêu cầu 8: Xem bảng điểm theo môn học cho giáo vụ
 CREATE PROCEDURE XemDiem_GiaoVu @tenMonHoc NVARCHAR(100), @tenLop VARCHAR(10)
@@ -403,7 +423,7 @@ GO
 -- GO
 
 -- yêu cầu 9: Sửa điểm sinh viên 
-ALTER PROCEDURE UpdateDiemSinhVien @mssv CHAR(10), @tenMonHoc NVARCHAR(100), @diemCC FLOAT, @diemGK FLOAT, @diemCK FLOAT, @diemTong FLOAT
+CREATE PROCEDURE UpdateDiemSinhVien @mssv CHAR(10), @tenMonHoc NVARCHAR(100), @diemCC FLOAT, @diemGK FLOAT, @diemCK FLOAT, @diemTong FLOAT
 AS BEGIN 
     -- phải tồn tại sinh viên, môn học trong hệ thống
     -- phải thoả mãn sinh viên đó có học môn học đó 
@@ -424,13 +444,17 @@ AS BEGIN
                     AND mh._tenMonHoc = @tenMonHoc
             )
 
-            UPDATE SinhVien_MonHoc SET _diemCC = @diemCC, _diemCK = @diemCK, _diemGK = @diemGK, _diemTong = @diemTong WHERE _maSinhVien_MonHoc = @maSinhVien_MonHoc
+            UPDATE SinhVien_MonHoc 
+            SET _diemCC = @diemCC, _diemCK = @diemCK, _diemGK = @diemGK, _diemTong = @diemTong 
+            WHERE _maSinhVien_MonHoc = @maSinhVien_MonHoc
         END
+        ELSE THROW 50005, N'Không tìm thấy sinh viên học lớp học', 1
     END
+    ELSE THROW 50006, N'Không tìm thấy sinh viên hay môn học', 1;
 END
 GO
 
--- EXEC UpdateDiemSinhVien '18120211', N'Lập trình hướng đối tượng', 5.5, 5.5, 5.5, 5.5
+-- EXEC UpdateDiemSinhVien '18120211', N'm', 5.5, 5.5, 5.5, 5.5
 -- GO
 
 -- yêu cầu 10: Xem bảng điểm cho sinh viên
@@ -447,21 +471,21 @@ GO
 -- EXEC XemDiem_SinhVien '18120201'
 -- GO
 
-insert LopHoc (_tenLop) values ('18CTT1')
-insert LopHoc (_tenLop) values ('18CTT2')
-insert LopHoc (_tenLop) values ('18CTT3')
-go
+-- insert LopHoc (_tenLop) values ('18CTT1')
+-- insert LopHoc (_tenLop) values ('18CTT2')
+-- insert LopHoc (_tenLop) values ('18CTT3')
+-- go
 
-insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('18120201', N'Nguyễn Bảo Long', 'Nam', '241845617', 1)
-insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('18120211', N'Võ Thế Minh', 'Nam', '241845618', 1)
-insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('18120227', N'Phạm Văn Minh Phương', 'Nam', '241845619', 2)
-insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('18120662', N'Trà Anh Toàn', 'Nam', '241845620', 2)
-insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('10000000', N'Đặng Thị Hồng Suyên', N'Nữ', '241845621', 3)
-go
+-- insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('18120201', N'Nguyễn Bảo Long', 'Nam', '241845617', 1)
+-- insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('18120211', N'Võ Thế Minh', 'Nam', '241845618', 1)
+-- insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('18120227', N'Phạm Văn Minh Phương', 'Nam', '241845619', 2)
+-- insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('18120662', N'Trà Anh Toàn', 'Nam', '241845620', 2)
+-- insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('10000000', N'Đặng Thị Hồng Suyên', N'Nữ', '241845621', 3)
+-- go
 
-insert MonHoc (_maMonCuaTruong, _tenMonHoc) values ('CTT001', N'Lập trình hướng đối tượng')
-insert MonHoc (_maMonCuaTruong, _tenMonHoc) values ('CTT002', N'Cơ sở dữ liệu')
-go 
+-- insert MonHoc (_maMonCuaTruong, _tenMonHoc) values ('CTT001', N'Lập trình hướng đối tượng')
+-- insert MonHoc (_maMonCuaTruong, _tenMonHoc) values ('CTT002', N'Cơ sở dữ liệu')
+-- go 
 
 /* -- insert data for testing
 -- 18ctt1 - oop - e1
@@ -506,8 +530,6 @@ SELECT * from LopHoc
 select * from SinhVien
 select * from MonHoc_LopHoc
 select * from SinhVien_MonHoc
-
-DELETE FROM LopHoc WHERE _maLop = 7
 
 
 -- select 
