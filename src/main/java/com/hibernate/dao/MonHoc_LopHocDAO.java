@@ -45,7 +45,7 @@ public class MonHoc_LopHocDAO {
             }
         }
         catch (SQLException se) {
-            System.err.println("importTKB(String filename) file MonHoc_LopHocDAO");
+            System.err.println("lỗi ở hàm importTKB(String filename) file MonHoc_LopHocDAO");
             do {
                 System.out.println("MESSAGE: " + se.getMessage());
                 System.out.println();
@@ -68,25 +68,45 @@ public class MonHoc_LopHocDAO {
         }
     }
 
-    public static void XemBangDiem_GiaoVu(String tenLop, String tenMonHoc) {
+    public static void XemTKB_SinhVien(String mssv) {
         Connection conn = null;
         try {
             conn = HibernateUtil.getConnection();
-            // XemDiem_GiaoVu @tenMonHoc NVARCHAR(100), @tenLop VARCHAR(10)
-            CallableStatement xemDiem = conn.prepareCall("{Call XemDiem_GiaoVu (?, ?)}");
-            xemDiem.setString(1, tenMonHoc);
-            xemDiem.setString(2, tenLop);
+            // XemTKB_SinhVien @mssv CHAR(10)
+            CallableStatement xemTKB_SinhVien = conn.prepareCall("{Call XemTKB_SinhVien(?)}");
+            xemTKB_SinhVien.setString(1, mssv);
 
-            ResultSet rs = xemDiem.executeQuery();
+            ResultSet rs = xemTKB_SinhVien.executeQuery();
             while (rs.next()) {
-                for (int i = 1; i <= 7; i++) {
-                    System.out.print(rs.getString(i) + " ");
-                }
-                System.out.println();
+                System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
             }
         }
         catch (SQLException se) {
-            System.err.println("Lỗi ở hàm XemBangDiem_GiaoVu file MonHoc_LopHocDAO");
+            System.err.println("Lỗi ở hàm XemTKB_SinhVien(String mssv) file MonHoc_LopHocDAO");
+            do {
+                System.out.println("MESSAGE: " + se.getMessage());
+                System.out.println();
+                se = se.getNextException();
+            }
+            while (se != null);
+        }
+    }
+
+    public static void XemTKB_LopHoc(String tenLopHoc) {
+        Connection conn = null;
+        try {
+            conn = HibernateUtil.getConnection();
+            // XemTKB_LopHoc @tenLop VARCHAR(10)
+            CallableStatement xemTKB_LopHoc = conn.prepareCall("{Call XemTKB_LopHoc(?)}");
+            xemTKB_LopHoc.setString(1, tenLopHoc);
+
+            ResultSet rs = xemTKB_LopHoc.executeQuery();
+            while (rs.next()) {
+                System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
+            }
+        }
+        catch (SQLException se) {
+            System.err.println("Lỗi ở hàm XemTKB_LopHoc(String tenLopHoc) file MonHoc_LopHocDAO");
             do {
                 System.out.println("MESSAGE: " + se.getMessage());
                 System.out.println();
@@ -97,9 +117,11 @@ public class MonHoc_LopHocDAO {
     }
 
     public static void main(String[] args) {
-        importTKB("./data/TKB/18CTT1.csv");
-        importTKB("./data/TKB/18CTT2.csv");
-        importTKB("./data/TKB/18CTT3.csv");
+        // importTKB("./data/TKB/18CTT1.csv");
+        // importTKB("./data/TKB/18CTT2.csv");
+        // importTKB("./data/TKB/18CTT3.csv");
+        // XemTKB_LopHoc("18CTT2");
+        XemTKB_SinhVien("18120201");
         // XemBangDiem_GiaoVu("18CTT2", "Lập trình hướng đối tượng");
         System.out.println("hello");
     }

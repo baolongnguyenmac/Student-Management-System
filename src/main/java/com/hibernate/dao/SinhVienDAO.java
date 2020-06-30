@@ -1,80 +1,125 @@
 package com.hibernate.dao;
 
+import java.io.*;
 import java.sql.*;
 
+import com.hibernate.entity.*;
 import com.hibernate.util.HibernateUtil;
 
 public class SinhVienDAO {
-    public static void DangKyMonHoc(String mssv, String tenMonHoc, String tenLop) {
+    public static void addSinhVien(SinhVien sv, String tenLop) {
         Connection conn = null;
         try {
             conn = HibernateUtil.getConnection();
-            // DangKyMonHoc @mssv CHAR(10), @tenMonHoc NVARCHAR(100), @tenLop VARCHAR(10)
-            CallableStatement dangKyMon = conn.prepareCall("{Call DangKyMonHoc(?, ?, ?)}");
-            dangKyMon.setString(1, mssv);
-            dangKyMon.setString(2, tenMonHoc);
-            dangKyMon.setString(3, tenLop);
-            dangKyMon.execute();
+
+            // do something here
+            // check if lopHoc exists
+            // check_exists_lopHoc @tenLop VARCHAR(10)
+            CallableStatement checkLopHocExists = conn.prepareCall("{? = Call check_exists_lopHoc(?)}");
+            checkLopHocExists.registerOutParameter(1, Types.INTEGER);
+            checkLopHocExists.setString(2, tenLop);
+            checkLopHocExists.execute();
+            if (checkLopHocExists.getInt(1) == 1) {
+                // Import_SinhVien @mssv CHAR(10), @hoTen NVARCHAR(100), @gioiTinh NVARCHAR(3), @cmnd CHAR(9), @tenLop VARCHAR(10)
+                CallableStatement statement = conn.prepareCall("{Call Import_SinhVien(?, ?, ?, ?, ?)}");
+                statement.setString(1, sv.get_mssv());
+                statement.setString(2, sv.get_hoTen());
+                statement.setString(3, sv.getGioiTinh());
+                statement.setString(4, sv.get_cmnd());
+                statement.setString(5, tenLop);
+
+                // sẽ quăng lỗi nếu sinh viên add vào bị trùng lặp 
+                statement.execute();
+            }
+            else {
+                // không có tenLop trong hệ thống 
+                // throw gì đó để giao diện biết được và hiển thị popup
+            }
         }
         catch (SQLException se) {
-            System.err.println("Lỗi ở hàm DangKyMonHoc file SinhVienDAO");
+            System.err.println("Lỗi ở hàm addSinhVien(SinhVien sv, String tenLop) file SinhVienDAO");
             do {
                 System.out.println("MESSAGE: " + se.getMessage());
                 System.out.println();
                 se = se.getNextException();
             }
             while (se != null);
+            // sau này khi code giao diện phải throw thêm 
+            // để khi lỗi xảy ra còn biết đường mà quăng popup :)
         }
     }
 
-    public static void HuyBoMonHoc(String mssv, String tenMonHoc) {
+    private static SinhVien readSinhVien(String line) {
+        String[] s = line.split(",");
+        SinhVien sv = new SinhVien(s[1], s[2], s[3], s[4]);
+        return sv;
+    }
+
+    // import danh sách lớp sử dụng stored procedure
+    public static void importDanhSachLop(String filename) {
         Connection conn = null;
+        BufferedReader br = null;
+        String line = null;
+
         try {
             conn = HibernateUtil.getConnection();
-            // HuyBoMonHoc @mssv CHAR(10), @tenMonHoc NVARCHAR(100)
-            CallableStatement huyBoMon = conn.prepareCall("{Call HuyBoMonHoc(?, ?)}");
-            huyBoMon.setString(1, mssv);
-            huyBoMon.setString(2, tenMonHoc);
-            huyBoMon.execute();
+            // br = new BufferedReader(new FileReader(filename));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf8"));
+
+            // do something here
+            // Import_SinhVien @mssv CHAR(10), @hoTen NVARCHAR(100), @gioiTinh NVARCHAR(3), @cmnd CHAR(9), @tenLop VARCHAR(10)
+            CallableStatement importSinhVien = conn.prepareCall("{Call Import_SinhVien(?, ?, ?, ?, ?)}");
+
+            // create_lopHoc @tenLop VARCHAR(10)
+            String tenLop = br.readLine();
+            // CallableStatement createLopHoc = conn.prepareCall("{Call create_lopHoc(?)}");
+            // // set _tenLop cho statement1
+            // createLopHoc.setString(1, tenLop);
+            // createLopHoc.execute();
+            LopHocDAO.addLopHoc(tenLop);
+
+            br.readLine();
+            while ((line = br.readLine()) != null) {
+                SinhVien sv = readSinhVien(line);
+                importSinhVien.setString(1, sv.get_mssv());
+                importSinhVien.setString(2, sv.get_hoTen());
+                importSinhVien.setString(3, sv.getGioiTinh());
+                importSinhVien.setString(4, sv.get_cmnd());
+                importSinhVien.setString(5, tenLop);
+                importSinhVien.execute();
+            }
         }
         catch (SQLException se) {
-            System.err.println("Lỗi ở hàm HuyBoMonHoc file SinhVienDAO");
+            System.err.println("Lỗi ở hàm importDanhSachLop(String filename) file SinhVienDAO");
             do {
                 System.out.println("MESSAGE: " + se.getMessage());
                 System.out.println();
                 se = se.getNextException();
             }
             while (se != null);
+            // sau này khi code giao diện phải throw thêm 
+            // để khi lỗi xảy ra còn biết đường mà quăng popup :)
         }
-    }
-
-    public static void XemDiem_SinhVien(String mssv) {
-        Connection conn = null;
-        try {
-            conn = HibernateUtil.getConnection();
-            // XemDiem_SinhVien @mssv CHAR(10)
-            CallableStatement xemDiem = conn.prepareCall("{Call XemDiem_SinhVien (?)}");
-            xemDiem.setString(1, mssv);
-            ResultSet rs = xemDiem.executeQuery();
-            while (rs.next()) {
-                for (int i = 1; i <= 5; i++) {
-                    System.out.print(rs.getString(i) + " ");
+        catch (IOException ioe) {
+            System.err.println(ioe);
+        }
+        finally {
+            if (br != null) {
+                try {
+                    br.close();
                 }
-                System.out.println();
+                catch (IOException e) {
+                    System.err.println("importDanhSachLop(String filename) trong SinhVienDAO");
+                }
             }
-        }
-        catch (SQLException se) {
-            System.err.println("Lỗi ở hàm XemDiem_SinhVien file SinhVienDAO");
-            do {
-                System.out.println("MESSAGE: " + se.getMessage());
-                System.out.println();
-                se = se.getNextException();
-            }
-            while (se != null);
         }
     }
 
     public static void main(String[] args) {
+        // importDanhSachLop("./data/Danh sách lớp/18CTT1.csv");
+        // importDanhSachLop("./data/Danh sách lớp/18CTT2.csv");
+        // importDanhSachLop("./data/Danh sách lớp/18CTT3.csv");
+        addSinhVien(new SinhVien("00000000", "Sinh Viên phụ", "Nam", "000000000"), "18CTT1");
         // HuyBoMonHoc("18120201", "Lập trình hướng đối tượng");
         // HuyBoMonHoc("18120201", "Lập trình hướng đối tượng");
         // DangKyMonHoc("18120201", "Lập trình hướng đối tượng", "18CTT1");
