@@ -1,8 +1,6 @@
 package com.hibernate.dao;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 
 import com.hibernate.util.HibernateUtil;
 
@@ -19,19 +17,15 @@ public class MonHocDAO {
             addMon.setString(2, maMonHoc);
             addMon.execute();
         }
-        catch (SQLException he) {
+        catch (SQLException se) {
             System.err.println("Lỗi ở hàm addMonHoc(String tenMonHoc, String maMonHoc) file MonHocDAO");
+            do {
+                System.out.println("MESSAGE: " + se.getMessage());
+                System.out.println();
+                se = se.getNextException();
+            }
+            while (se != null);
         }
-        // finally {
-        //     if (conn != null) {
-        //         try {
-        //             conn.close();
-        //         }
-        //         catch (SQLException se) {
-        //             System.err.println("Đến đây mà còn lỗi thì chắc toang nặng\nHàm addMonHoc(String tenMonHoc, String maMonHoc) file MonHocDAO");
-        //         }
-        //     }
-        // }
     }
     public static void main(String[] args) {
         addMonHoc("Lập trình hướng đối tượng", "CTT001");

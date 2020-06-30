@@ -18,6 +18,12 @@ public class SinhVienDAO {
         }
         catch (SQLException se) {
             System.err.println("Lỗi ở hàm DangKyMonHoc file SinhVienDAO");
+            do {
+                System.out.println("MESSAGE: " + se.getMessage());
+                System.out.println();
+                se = se.getNextException();
+            }
+            while (se != null);
         }
     }
 
@@ -33,6 +39,12 @@ public class SinhVienDAO {
         }
         catch (SQLException se) {
             System.err.println("Lỗi ở hàm HuyBoMonHoc file SinhVienDAO");
+            do {
+                System.out.println("MESSAGE: " + se.getMessage());
+                System.out.println();
+                se = se.getNextException();
+            }
+            while (se != null);
         }
     }
 
@@ -53,11 +65,13 @@ public class SinhVienDAO {
         }
         catch (SQLException se) {
             System.err.println("Lỗi ở hàm XemDiem_SinhVien file SinhVienDAO");
+            do {
+                System.out.println("MESSAGE: " + se.getMessage());
+                System.out.println();
+                se = se.getNextException();
+            }
+            while (se != null);
         }
-    }
-
-    public static void UpdateDiem(String mssv, float diemCC, float diemGK, float diemCK, float diemTong) {
-        
     }
 
     public static void main(String[] args) {
@@ -65,6 +79,7 @@ public class SinhVienDAO {
         // HuyBoMonHoc("18120201", "Lập trình hướng đối tượng");
         // DangKyMonHoc("18120201", "Lập trình hướng đối tượng", "18CTT1");
         // DangKyMonHoc("18120201", "Lập trình hướng đối tượng", "18CTT1");
-        XemDiem_SinhVien("18120201");
+        // XemDiem_SinhVien("18120201");
+        // UpdateDiem("18120201", "Lập trình hướng đối tượng", 9, 9, 9, 9);
     }
 }

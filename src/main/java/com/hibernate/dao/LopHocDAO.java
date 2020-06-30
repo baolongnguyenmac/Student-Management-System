@@ -12,12 +12,19 @@ public class LopHocDAO {
         try {
             conn = HibernateUtil.getConnection();
             // create_lopHoc @tenLop VARCHAR(10)
+            // nếu đã tồn tại thì không tạo nữa, ngược lại, tạo mới 1 lớp học
             CallableStatement createLopHoc = conn.prepareCall("{Call create_lopHoc(?)}");
             createLopHoc.setString(1, tenLop);
             createLopHoc.execute();
         }
         catch (SQLException se) {
             System.err.println("Lỗi ở hàm addLopHoc(String tenLop) file LopHocDAO");
+            do {
+                System.out.println("MESSAGE: " + se.getMessage());
+                System.out.println();
+                se = se.getNextException();
+            }
+            while (se != null);
         }
     }
 
@@ -42,6 +49,7 @@ public class LopHocDAO {
                 statement.setString(4, sv.get_cmnd());
                 statement.setString(5, tenLop);
 
+                // sẽ quăng lỗi nếu sinh viên add vào bị trùng lặp 
                 statement.execute();
             }
             else {
@@ -51,19 +59,15 @@ public class LopHocDAO {
         }
         catch (SQLException se) {
             System.err.println("Lỗi ở hàm addSinhVien(SinhVien sv, String tenLop) file LopHocDAO");
+            do {
+                System.out.println("MESSAGE: " + se.getMessage());
+                System.out.println();
+                se = se.getNextException();
+            }
+            while (se != null);
             // sau này khi code giao diện phải throw thêm 
             // để khi lỗi xảy ra còn biết đường mà quăng popup :)
         }
-        // finally {
-        //     if (conn != null) {
-        //         try {
-        //             conn.close();
-        //         }
-        //         catch (SQLException se) {
-        //             System.err.println("Đến đây mà còn lỗi thì chắc toang nặng\nHàm addSinhVien(SinhVien sv, String tenLop) file LopHocDAO");
-        //         }
-        //     }
-        // }
     }
 
     private static SinhVien readSinhVien(String line) {
@@ -80,7 +84,8 @@ public class LopHocDAO {
 
         try {
             conn = HibernateUtil.getConnection();
-            br = new BufferedReader(new FileReader(filename));
+            // br = new BufferedReader(new FileReader(filename));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf8"));
 
             // do something here
             // Import_SinhVien @mssv CHAR(10), @hoTen NVARCHAR(100), @gioiTinh NVARCHAR(3), @cmnd CHAR(9), @tenLop VARCHAR(10)
@@ -105,8 +110,13 @@ public class LopHocDAO {
             }
         }
         catch (SQLException se) {
-            // System.err.println("Lỗi ở hàm importDanhSachLop(String filename) file LopHocDAO");
-            System.err.println(se);
+            System.err.println("Lỗi ở hàm importDanhSachLop(String filename) file LopHocDAO");
+            do {
+                System.out.println("MESSAGE: " + se.getMessage());
+                System.out.println();
+                se = se.getNextException();
+            }
+            while (se != null);
             // sau này khi code giao diện phải throw thêm 
             // để khi lỗi xảy ra còn biết đường mà quăng popup :)
         }
@@ -114,14 +124,6 @@ public class LopHocDAO {
             System.err.println(ioe);
         }
         finally {
-            // if (conn != null) {
-            //     try {
-            //         conn.close();
-            //     }
-            //     catch (SQLException se) {
-            //         System.err.println("Đến đây mà còn lỗi thì chắc toang nặng\nHàm importDanhSachLop(String filename) file LopHocDAO");
-            //     }
-            // }
             if (br != null) {
                 try {
                     br.close();
@@ -148,6 +150,12 @@ public class LopHocDAO {
         }
         catch (SQLException se) {
             System.err.println("Lỗi ở hàm XemDanhSachLop(String tenLop) file LopHocDAO");
+            do {
+                System.out.println("MESSAGE: " + se.getMessage());
+                System.out.println();
+                se = se.getNextException();
+            }
+            while (se != null);
         }
     }
 
@@ -157,7 +165,7 @@ public class LopHocDAO {
         importDanhSachLop("./data/Danh sách lớp/18CTT2.csv");
         importDanhSachLop("./data/Danh sách lớp/18CTT3.csv");
         // XemDanhSachLop("18CTT2");
-        // addSinhVien(new SinhVien("18120201", "Nguyễn", "Nam", "123456789"), "18CTT1");
+        // addSinhVien(new SinhVien("00000000", "Sinh Viên phụ", "Nam", "000000000"), "18CTT1");
         System.out.println("hello :)");
         // addSinhVien(new SinhVien("18120201", "Nguyễn Bảo Long", "Nam", "241845617"), "18CTT1");
     }

@@ -17,7 +17,7 @@ public class MonHoc_LopHocDAO {
 
         try {
             conn = HibernateUtil.getConnection();
-            br = new BufferedReader(new FileReader(filename));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(filename), "utf8"));
 
             // do something
             // Import_TKB @tenMonHoc NVARCHAR(100), @tenLop VARCHAR(10), @phongHoc VARCHAR(10)
@@ -35,9 +35,6 @@ public class MonHoc_LopHocDAO {
                 String[] array = readLineTKB(line);
 
                 // tạo ra môn học: k.tr xem có tạo trước đó chưa, nếu chưa thì tạo
-                // createMonHoc.setString(1, array[2]);
-                // createMonHoc.setString(2, array[1]);
-                // createMonHoc.execute();
                 MonHocDAO.addMonHoc(array[2], array[1]);
 
                 // tạo tkb
@@ -49,19 +46,17 @@ public class MonHoc_LopHocDAO {
         }
         catch (SQLException se) {
             System.err.println("importTKB(String filename) file MonHoc_LopHocDAO");
+            do {
+                System.out.println("MESSAGE: " + se.getMessage());
+                System.out.println();
+                se = se.getNextException();
+            }
+            while (se != null);
         }
         catch (IOException ioe) {
             System.err.println("Lỗi IOE ở Hàm importTKB(String filename) file MonHoc_LopHocDAO");
         }
         finally {
-            // if (conn != null) {
-            //     try {
-            //         conn.close();
-            //     }
-            //     catch (SQLException se) {
-            //         System.err.println("Đến đây mà còn lỗi thì chắc toang nặng\nHàm importTKB(String filename) file MonHoc_LopHocDAO");
-            //     }
-            // }
             if (br != null) {
                 try {
                     br.close();
@@ -91,16 +86,21 @@ public class MonHoc_LopHocDAO {
             }
         }
         catch (SQLException se) {
-            // System.err.println(se);
             System.err.println("Lỗi ở hàm XemBangDiem_GiaoVu file MonHoc_LopHocDAO");
+            do {
+                System.out.println("MESSAGE: " + se.getMessage());
+                System.out.println();
+                se = se.getNextException();
+            }
+            while (se != null);
         }
     }
 
     public static void main(String[] args) {
-        // importTKB("./data/TKB/18CTT1.csv");
-        // importTKB("./data/TKB/18CTT2.csv");
-        // importTKB("./data/TKB/18CTT3.csv");
-        XemBangDiem_GiaoVu("18CTT2", "Lập trình hướng đối tượng");
+        importTKB("./data/TKB/18CTT1.csv");
+        importTKB("./data/TKB/18CTT2.csv");
+        importTKB("./data/TKB/18CTT3.csv");
+        // XemBangDiem_GiaoVu("18CTT2", "Lập trình hướng đối tượng");
         System.out.println("hello");
     }
 
