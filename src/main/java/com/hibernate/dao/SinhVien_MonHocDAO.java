@@ -64,7 +64,7 @@ public class SinhVien_MonHocDAO {
         return line.split(",");
     }
 
-    public static void ImportBangDiem(String filename) {
+    public static void ImportBangDiem(String filename) throws SQLException {
         Connection conn = null;
         BufferedReader br = null;
         String line = null;
@@ -96,15 +96,15 @@ public class SinhVien_MonHocDAO {
         catch (IOException ioe) {
             System.err.println(ioe);
         }
-        catch (SQLException se) {
-            System.err.println("Lỗi ở hàm ImportBangDiem file SinhVien_MonHocDAO");
-            do {
-                System.out.println("MESSAGE: " + se.getMessage());
-                System.out.println();
-                se = se.getNextException();
-            }
-            while (se != null);
-        }
+        // catch (SQLException se) {
+        //     System.err.println("Lỗi ở hàm ImportBangDiem file SinhVien_MonHocDAO");
+        //     do {
+        //         System.out.println("MESSAGE: " + se.getMessage());
+        //         System.out.println();
+        //         se = se.getNextException();
+        //     }
+        //     while (se != null);
+        // }
         finally {
             if (br != null) {
                 try {
@@ -117,9 +117,9 @@ public class SinhVien_MonHocDAO {
         }
     }
 
-    public static void UpdateDiem(String mssv, String tenMonHoc, float diemCC, float diemGK, float diemCK, float diemTong) {
+    public static void UpdateDiem(String mssv, String tenMonHoc, float diemCC, float diemGK, float diemCK, float diemTong) throws SQLException {
         Connection conn = null;
-        try {
+        // try {
             conn = HibernateUtil.getConnection();
             // UpdateDiemSinhVien @mssv CHAR(10), @tenMonHoc NVARCHAR(100), @diemCC FLOAT, @diemGK FLOAT, @diemCK FLOAT, @diemTong FLOAT
             CallableStatement updateDiem = conn.prepareCall("{Call UpdateDiemSinhVien(?, ?, ?, ?, ? ,?)}");
@@ -131,21 +131,21 @@ public class SinhVien_MonHocDAO {
             updateDiem.setFloat(6, diemTong);
 
             updateDiem.execute();
-        }
-        catch (SQLException se) {
-            System.err.println("Lỗi ở hàm UpdateDiem file SinhVien_MonHocDAO");
-            do {
-                System.out.println("MESSAGE: " + se.getMessage());
-                System.out.println();
-                se = se.getNextException();
-            }
-            while (se != null);
-        }
+        // }
+        // catch (SQLException se) {
+        //     System.err.println("Lỗi ở hàm UpdateDiem file SinhVien_MonHocDAO");
+        //     do {
+        //         System.out.println("MESSAGE: " + se.getMessage());
+        //         System.out.println();
+        //         se = se.getNextException();
+        //     }
+        //     while (se != null);
+        // }
     }
 
-    public static void DangKyMonHoc(String mssv, String tenMonHoc, String tenLop) {
+    public static void DangKyMonHoc(String mssv, String tenMonHoc, String tenLop) throws SQLException {
         Connection conn = null;
-        try {
+        // try {
             conn = HibernateUtil.getConnection();
             // DangKyMonHoc @mssv CHAR(10), @tenMonHoc NVARCHAR(100), @tenLop VARCHAR(10)
             CallableStatement dangKyMon = conn.prepareCall("{Call DangKyMonHoc(?, ?, ?)}");
@@ -153,37 +153,37 @@ public class SinhVien_MonHocDAO {
             dangKyMon.setString(2, tenMonHoc);
             dangKyMon.setString(3, tenLop);
             dangKyMon.execute();
-        }
-        catch (SQLException se) {
-            System.err.println("Lỗi ở hàm DangKyMonHoc file SinhVien_MonHocDAO");
-            do {
-                System.out.println("MESSAGE: " + se.getMessage());
-                System.out.println();
-                se = se.getNextException();
-            }
-            while (se != null);
-        }
+        // }
+        // catch (SQLException se) {
+        //     System.err.println("Lỗi ở hàm DangKyMonHoc file SinhVien_MonHocDAO");
+        //     do {
+        //         System.out.println("MESSAGE: " + se.getMessage());
+        //         System.out.println();
+        //         se = se.getNextException();
+        //     }
+        //     while (se != null);
+        // }
     }
 
-    public static void HuyBoMonHoc(String mssv, String tenMonHoc) {
+    public static void HuyBoMonHoc(String mssv, String tenMonHoc) throws SQLException {
         Connection conn = null;
-        try {
+        // try {
             conn = HibernateUtil.getConnection();
             // HuyBoMonHoc @mssv CHAR(10), @tenMonHoc NVARCHAR(100)
             CallableStatement huyBoMon = conn.prepareCall("{Call HuyBoMonHoc(?, ?)}");
             huyBoMon.setString(1, mssv);
             huyBoMon.setString(2, tenMonHoc);
             huyBoMon.execute();
-        }
-        catch (SQLException se) {
-            System.err.println("Lỗi ở hàm HuyBoMonHoc file SinhVien_MonHocDAO");
-            do {
-                System.out.println("MESSAGE: " + se.getMessage());
-                System.out.println();
-                se = se.getNextException();
-            }
-            while (se != null);
-        }
+        // }
+        // catch (SQLException se) {
+        //     System.err.println("Lỗi ở hàm HuyBoMonHoc file SinhVien_MonHocDAO");
+        //     do {
+        //         System.out.println("MESSAGE: " + se.getMessage());
+        //         System.out.println();
+        //         se = se.getNextException();
+        //     }
+        //     while (se != null);
+        // }
     }
 
     public static void main(String[] args) {

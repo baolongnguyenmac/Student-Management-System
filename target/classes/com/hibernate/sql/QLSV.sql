@@ -12,11 +12,11 @@ GO
 
 CREATE TABLE SinhVien (
     _maSinhVien BIGINT IDENTITY(1,1),
-    _mssv CHAR(10) UNIQUE,
+    _mssv CHAR(10) UNIQUE NOT NULL,
     _hoTen NVARCHAR(100),
     _gioiTinh NVARCHAR(3),
     _cmnd CHAR(9) UNIQUE,
-    _maLop BIGINT,
+    _maLop BIGINT NOT NULL,
 
     CONSTRAINT PK_SinhVien PRIMARY KEY(_maSinhVien),
     CONSTRAINT Check_GioiTinh CHECK (_gioiTinh in ('Nam', 'nam', N'Nữ', N'nữ'))
@@ -25,7 +25,7 @@ GO
 
 CREATE TABLE LopHoc (
     _maLop BIGINT IDENTITY(1,1),
-    _tenLop VARCHAR(10) UNIQUE,
+    _tenLop VARCHAR(10) UNIQUE NOT NULL,
 
     CONSTRAINT PK_LopHoc PRIMARY KEY(_maLop)
 )
@@ -34,7 +34,7 @@ GO
 CREATE TABLE MonHoc (
     _maMonHoc BIGINT IDENTITY(1,1),
     _maMonCuaTruong CHAR(6) UNIQUE NOT NULL,
-    _tenMonHoc NVARCHAR(100) UNIQUE,
+    _tenMonHoc NVARCHAR(100) UNIQUE NOT NULL,
 
     CONSTRAINT PK_MonHoc PRIMARY KEY(_maMonHoc)
 )
@@ -42,8 +42,8 @@ GO
 
 CREATE TABLE MonHoc_LopHoc (
     _maMonHoc_LopHoc BIGINT IDENTITY(1,1),
-    _maLop BIGINT,
-    _maMonHoc BIGINT,
+    _maLop BIGINT NOT NULL,
+    _maMonHoc BIGINT NOT NULL,
     _phongHoc VARCHAR(10),
 
     CONSTRAINT PK_MonHoc_LopHoc PRIMARY KEY(_maMonHoc_LopHoc)
@@ -52,8 +52,8 @@ GO
 
 CREATE TABLE SinhVien_MonHoc (
     _maSinhVien_MonHoc BIGINT IDENTITY(1,1),
-    _maMonHoc_LopHoc BIGINT,
-    _maSinhVien BIGINT,
+    _maMonHoc_LopHoc BIGINT NOT NULL,
+    _maSinhVien BIGINT NOT NULL,
     _diemCC FLOAT,
     _diemGK FLOAT,
     _diemCK FLOAT,
@@ -302,7 +302,9 @@ AS BEGIN
 
             INSERT SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc) VALUES (@maSinhVien, @maMonHoc_LopHoc)
         END
+        ELSE THROW 50009, N'Không tìm thấy sinh viên học môn học', 1;
     END
+    ELSE THROW 50010, N'Không tìm thấy sinh viên/lớp hoc/môn học', 1;
 END
 GO
 
@@ -334,7 +336,9 @@ AS BEGIN
 
             DELETE FROM SinhVien_MonHoc WHERE _maSinhVien_MonHoc = @maSinhVien_MonHoc
         END
+        ELSE THROW 50011, N'Sinh viên không học môn học nên không huỷ được', 1;
     END
+    ELSE THROW 50012, N'Không tìm thấy sinh viên/môn học', 1;
 END
 GO
 
@@ -357,6 +361,8 @@ GO
 -- yêu cầu 6.1: xem TKB phía sinh viên
 CREATE PROCEDURE XemTKB_SinhVien @mssv CHAR(10)
 AS BEGIN
+    IF (NOT EXISTS (SELECT * FROM SinhVien sv WHERE sv._mssv = @mssv))
+        THROW 50008, N'Không tìm thấy sinh viên', 1;
     SELECT mh._maMonCuaTruong, mh._tenMonHoc, mh_lh._phongHoc
     FROM MonHoc mh, MonHoc_LopHoc mh_lh, SinhVien_MonHoc sv_mh, SinhVien sv
     WHERE sv_mh._maSinhVien = sv._maSinhVien AND sv._mssv = @mssv
@@ -371,6 +377,9 @@ GO
 -- yêu cầu 6.2: xem TKB theo lớp của giáo vụ
 CREATE PROCEDURE XemTKB_LopHoc @tenLop VARCHAR(10)
 AS BEGIN
+    IF (NOT EXISTS (SELECT * FROM LopHoc lh WHERE lh._tenLop = @tenLop))
+        THROW 50007, N'Không tìm thấy lớp', 1;
+
     SELECT mh._maMonCuaTruong, mh._tenMonHoc, mh_lh._phongHoc
     FROM MonHoc mh, MonHoc_LopHoc mh_lh, LopHoc lh
     WHERE mh._maMonHoc = mh_lh._maMonHoc
@@ -404,7 +413,7 @@ AS BEGIN
 END
 GO
 
--- EXEC ImportBangDiem '18CTT1', N'Cơ cở dữ liệu', '18120201', 5,5,5,5
+-- EXEC ImportBangDiem '18CTT1', N'Cơ sở dữ liệu', '18120201', 5,5,5,5
 -- GO
 
 -- yêu cầu 8: Xem bảng điểm theo môn học cho giáo vụ

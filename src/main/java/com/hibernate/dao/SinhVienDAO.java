@@ -7,9 +7,9 @@ import com.hibernate.entity.*;
 import com.hibernate.util.HibernateUtil;
 
 public class SinhVienDAO {
-    public static void addSinhVien(SinhVien sv, String tenLop) {
+    public static void addSinhVien(SinhVien sv, String tenLop) throws SQLException {
         Connection conn = null;
-        try {
+        // try {
             conn = HibernateUtil.getConnection();
 
             // do something here
@@ -32,21 +32,20 @@ public class SinhVienDAO {
                 statement.execute();
             }
             else {
-                // không có tenLop trong hệ thống 
-                // throw gì đó để giao diện biết được và hiển thị popup
+                throw new RuntimeException();
             }
-        }
-        catch (SQLException se) {
-            System.err.println("Lỗi ở hàm addSinhVien(SinhVien sv, String tenLop) file SinhVienDAO");
-            do {
-                System.out.println("MESSAGE: " + se.getMessage());
-                System.out.println();
-                se = se.getNextException();
-            }
-            while (se != null);
-            // sau này khi code giao diện phải throw thêm 
-            // để khi lỗi xảy ra còn biết đường mà quăng popup :)
-        }
+        // }
+        // catch (SQLException se) {
+        //     System.err.println("Lỗi ở hàm addSinhVien(SinhVien sv, String tenLop) file SinhVienDAO");
+        //     do {
+        //         System.out.println("MESSAGE: " + se.getMessage());
+        //         System.out.println();
+        //         se = se.getNextException();
+        //     }
+        //     while (se != null);
+        //     // sau này khi code giao diện phải throw thêm 
+        //     // để khi lỗi xảy ra còn biết đường mà quăng popup :)
+        // }
     }
 
     private static SinhVien readSinhVien(String line) {
@@ -56,7 +55,7 @@ public class SinhVienDAO {
     }
 
     // import danh sách lớp sử dụng stored procedure
-    public static void importDanhSachLop(String filename) {
+    public static void importDanhSachLop(String filename) throws SQLException {
         Connection conn = null;
         BufferedReader br = null;
         String line = null;
@@ -70,12 +69,8 @@ public class SinhVienDAO {
             // Import_SinhVien @mssv CHAR(10), @hoTen NVARCHAR(100), @gioiTinh NVARCHAR(3), @cmnd CHAR(9), @tenLop VARCHAR(10)
             CallableStatement importSinhVien = conn.prepareCall("{Call Import_SinhVien(?, ?, ?, ?, ?)}");
 
-            // create_lopHoc @tenLop VARCHAR(10)
+            // nếu không tồn tại lớp học thì add lớp học vào 
             String tenLop = br.readLine();
-            // CallableStatement createLopHoc = conn.prepareCall("{Call create_lopHoc(?)}");
-            // // set _tenLop cho statement1
-            // createLopHoc.setString(1, tenLop);
-            // createLopHoc.execute();
             LopHocDAO.addLopHoc(tenLop);
 
             br.readLine();
@@ -89,17 +84,17 @@ public class SinhVienDAO {
                 importSinhVien.execute();
             }
         }
-        catch (SQLException se) {
-            System.err.println("Lỗi ở hàm importDanhSachLop(String filename) file SinhVienDAO");
-            do {
-                System.out.println("MESSAGE: " + se.getMessage());
-                System.out.println();
-                se = se.getNextException();
-            }
-            while (se != null);
-            // sau này khi code giao diện phải throw thêm 
-            // để khi lỗi xảy ra còn biết đường mà quăng popup :)
-        }
+        // catch (SQLException se) {
+        //     System.err.println("Lỗi ở hàm importDanhSachLop(String filename) file SinhVienDAO");
+        //     do {
+        //         System.out.println("MESSAGE: " + se.getMessage());
+        //         System.out.println();
+        //         se = se.getNextException();
+        //     }
+        //     while (se != null);
+        //     // sau này khi code giao diện phải throw thêm 
+        //     // để khi lỗi xảy ra còn biết đường mà quăng popup :)
+        // }
         catch (IOException ioe) {
             System.err.println(ioe);
         }
@@ -116,15 +111,20 @@ public class SinhVienDAO {
     }
 
     public static void main(String[] args) {
-        // importDanhSachLop("./data/Danh sách lớp/18CTT1.csv");
-        // importDanhSachLop("./data/Danh sách lớp/18CTT2.csv");
-        // importDanhSachLop("./data/Danh sách lớp/18CTT3.csv");
-        addSinhVien(new SinhVien("00000000", "Sinh Viên phụ", "Nam", "000000000"), "18CTT1");
-        // HuyBoMonHoc("18120201", "Lập trình hướng đối tượng");
-        // HuyBoMonHoc("18120201", "Lập trình hướng đối tượng");
-        // DangKyMonHoc("18120201", "Lập trình hướng đối tượng", "18CTT1");
-        // DangKyMonHoc("18120201", "Lập trình hướng đối tượng", "18CTT1");
-        // XemDiem_SinhVien("18120201");
-        // UpdateDiem("18120201", "Lập trình hướng đối tượng", 9, 9, 9, 9);
+        try {
+            importDanhSachLop("./data/Danh sách lớp/18CTT1.csv");
+            importDanhSachLop("./data/Danh sách lớp/18CTT2.csv");
+            importDanhSachLop("./data/Danh sách lớp/18CTT3.csv");
+            // addSinhVien(new SinhVien("00000000", "Sinh Viên phụ", "Nam", "000000000"), "18CTT1");
+            // HuyBoMonHoc("18120201", "Lập trình hướng đối tượng");
+            // HuyBoMonHoc("18120201", "Lập trình hướng đối tượng");
+            // DangKyMonHoc("18120201", "Lập trình hướng đối tượng", "18CTT1");
+            // DangKyMonHoc("18120201", "Lập trình hướng đối tượng", "18CTT1");
+            // XemDiem_SinhVien("18120201");
+            // UpdateDiem("18120201", "Lập trình hướng đối tượng", 9, 9, 9, 9);
+        }
+        catch (SQLException se) {
+            
+        }
     }
 }

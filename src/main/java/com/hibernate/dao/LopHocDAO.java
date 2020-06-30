@@ -5,30 +5,31 @@ import java.sql.*;
 import com.hibernate.util.HibernateUtil;
 
 public class LopHocDAO {
-    public static void addLopHoc(String tenLop) {
+    public static void addLopHoc(String tenLop) throws SQLException {
         Connection conn = null;
-        try {
+        // try {
             conn = HibernateUtil.getConnection();
             // create_lopHoc @tenLop VARCHAR(10)
             // nếu đã tồn tại thì không tạo nữa, ngược lại, tạo mới 1 lớp học
             CallableStatement createLopHoc = conn.prepareCall("{Call create_lopHoc(?)}");
             createLopHoc.setString(1, tenLop);
             createLopHoc.execute();
-        }
-        catch (SQLException se) {
-            System.err.println("Lỗi ở hàm addLopHoc(String tenLop) file LopHocDAO");
-            do {
-                System.out.println("MESSAGE: " + se.getMessage());
-                System.out.println();
-                se = se.getNextException();
-            }
-            while (se != null);
-        }
+        // }
+        // catch (SQLException se) {
+        //     System.err.println("Lỗi ở hàm addLopHoc(String tenLop) file LopHocDAO");
+        //     do {
+        //         System.out.println("MESSAGE: " + se.getMessage());
+        //         System.out.println();
+        //         se = se.getNextException();
+        //     }
+        //     while (se != null);
+        //     throw new RuntimeException(se);
+        // }
     }
 
-    public static void XemDanhSachLop(String tenLop) {
+    public static void XemDanhSachLop(String tenLop) throws SQLException {
         Connection conn = null;
-        try {
+        // try {
             conn = HibernateUtil.getConnection();
             // XemDanhSachLop @tenLop VARCHAR(10)
             CallableStatement xemDanhSach = conn.prepareCall("{Call XemDanhSachLop(?)}");
@@ -38,16 +39,17 @@ public class LopHocDAO {
             while (rs.next()) {
                 System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4));
             }
-        }
-        catch (SQLException se) {
-            System.err.println("Lỗi ở hàm XemDanhSachLop(String tenLop) file LopHocDAO");
-            do {
-                System.out.println("MESSAGE: " + se.getMessage());
-                System.out.println();
-                se = se.getNextException();
-            }
-            while (se != null);
-        }
+        // }
+        // catch (SQLException se) {
+        //     System.err.println("Lỗi ở hàm XemDanhSachLop(String tenLop) file LopHocDAO");
+        //     do {
+        //         System.out.println("MESSAGE: " + se.getMessage());
+        //         System.out.println();
+        //         se = se.getNextException();
+        //     }
+        //     while (se != null);
+        //     throw new RuntimeException(se);
+        // }
     }
 
     public static void main(String[] args) {
