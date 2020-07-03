@@ -2,6 +2,7 @@ package com.hibernate.dao;
 
 import java.io.*;
 import java.sql.*;
+import java.util.ArrayList;
 
 import com.hibernate.util.HibernateUtil;
 
@@ -66,7 +67,8 @@ public class MonHoc_LopHocDAO {
         }
     }
 
-    public static void XemTKB_SinhVien(String mssv) throws SQLException {
+    public static ArrayList<ArrayList<String>> XemTKB_SinhVien(String mssv) throws SQLException {
+        ArrayList<ArrayList<String>> list = new ArrayList<>();
         Connection conn = null;
         // try {
             conn = HibernateUtil.getConnection();
@@ -75,9 +77,19 @@ public class MonHoc_LopHocDAO {
             xemTKB_SinhVien.setString(1, mssv);
 
             ResultSet rs = xemTKB_SinhVien.executeQuery();
+            ArrayList<String> l1 = new ArrayList<>();
+            ArrayList<String> l2 = new ArrayList<>();
+            ArrayList<String> l3 = new ArrayList<>();
             while (rs.next()) {
-                System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
+                l1.add(rs.getString(1));
+                l2.add(rs.getString(2));
+                l3.add(rs.getString(3));
+                // System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
             }
+            list.add(l1);
+            list.add(l2);
+            list.add(l3);
+            return list;
         // }
         // catch (SQLException se) {
         //     System.err.println("Lỗi ở hàm XemTKB_SinhVien(String mssv) file MonHoc_LopHocDAO");
@@ -91,7 +103,8 @@ public class MonHoc_LopHocDAO {
         // }
     }
 
-    public static void XemTKB_LopHoc(String tenLopHoc) throws SQLException {
+    public static ArrayList<ArrayList<String>> XemTKB_LopHoc(String tenLopHoc) throws SQLException {
+        ArrayList<ArrayList<String>> list = new ArrayList<>();
         Connection conn = null;
         // try {
             conn = HibernateUtil.getConnection();
@@ -100,9 +113,19 @@ public class MonHoc_LopHocDAO {
             xemTKB_LopHoc.setString(1, tenLopHoc);
 
             ResultSet rs = xemTKB_LopHoc.executeQuery();
+            ArrayList<String> l1 = new ArrayList<>();
+            ArrayList<String> l2 = new ArrayList<>();
+            ArrayList<String> l3 = new ArrayList<>();
             while (rs.next()) {
-                System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
+                l1.add(rs.getString(1));
+                l2.add(rs.getString(2));
+                l3.add(rs.getString(3));
+                // System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3));
             }
+            list.add(l1);
+            list.add(l2);
+            list.add(l3);
+            return list;
         // }
         // catch (SQLException se) {
         //     System.err.println("Lỗi ở hàm XemTKB_LopHoc(String tenLopHoc) file MonHoc_LopHocDAO");
@@ -117,13 +140,21 @@ public class MonHoc_LopHocDAO {
     }
 
     public static void main(String[] args) {
+        ArrayList<ArrayList<String>> list = new ArrayList<>();
         try {
 
             // importTKB("./data/TKB/18CTT1.csv");
             // importTKB("./data/TKB/18CTT2.csv");
             // importTKB("./data/TKB/18CTT3.csv");
             // XemTKB_LopHoc("18CTT2");
-            XemTKB_SinhVien("1811");
+            // XemTKB_SinhVien("18120201");
+            list = XemTKB_LopHoc("18CTT2");
+            for (int i = 0; i < list.get(0).size(); i++) {
+                for (int j = 0; j < list.size(); j++) {
+                    System.out.print(list.get(j).get(i) + "\t");
+                }
+                System.out.println();
+            }
             // XemBangDiem_GiaoVu("18CTT2", "Lập trình hướng đối tượng");
             System.out.println("hello");
         }

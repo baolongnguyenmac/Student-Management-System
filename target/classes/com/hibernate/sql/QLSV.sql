@@ -348,6 +348,8 @@ GO
 -- yêu cầu 5: xem danh sách lớp
 CREATE PROCEDURE XemDanhSachLop @tenLop VARCHAR(10)
 AS BEGIN
+    IF (NOT EXISTS (SELECT * FROM LopHoc lh WHERE lh._tenLop = @tenLop))
+        THROW 50013, N'Không tìm thấy lớp học', 1;
     SELECT sv._mssv, sv._hoTen, sv._gioiTinh, sv._cmnd
     FROM SinhVien sv, LopHoc lh
     WHERE sv._maLop = lh._maLop 
@@ -419,6 +421,13 @@ GO
 -- yêu cầu 8: Xem bảng điểm theo môn học cho giáo vụ
 CREATE PROCEDURE XemDiem_GiaoVu @tenMonHoc NVARCHAR(100), @tenLop VARCHAR(10)
 AS BEGIN
+    IF (NOT EXISTS (
+        SELECT * 
+        FROM LopHoc lh, MonHoc mh, MonHoc_LopHoc mh_lh
+        WHERE lh._tenLop = @tenLop AND lh._maLop = mh_lh._maLop
+            AND mh._tenMonHoc = @tenMonHoc AND mh._maMonHoc = mh_lh._maMonHoc
+    ))
+        THROW 50015, N'Không tìm thấy môn học thuộc lớp học', 1
     SELECT sv._mssv, sv._hoTen, mh._tenMonHoc, sv_mh._diemCC, sv_mh._diemGK, sv_mh._diemCK, sv_mh._diemTong
     FROM SinhVien_MonHoc sv_mh, SinhVien sv, MonHoc mh, MonHoc_LopHoc mh_lh, LopHoc lh
     WHERE sv._maSinhVien = sv_mh._maSinhVien 
@@ -469,6 +478,8 @@ GO
 -- yêu cầu 10: Xem bảng điểm cho sinh viên
 CREATE PROCEDURE XemDiem_SinhVien @mssv CHAR(10)
 AS BEGIN
+    IF (NOT EXISTS (SELECT * FROM SinhVien sv WHERE sv._mssv = @mssv))
+        THROW 50014, N'Không tìm thấy sinh viên', 1;
     SELECT mh._tenMonHoc, sv_mh._diemCC, sv_mh._diemGK, sv_mh._diemCK, sv_mh._diemTong
     FROM SinhVien_MonHoc sv_mh, SinhVien sv, MonHoc mh, MonHoc_LopHoc mh_lh
     WHERE sv._mssv = @mssv AND sv._maSinhVien = sv_mh._maSinhVien 

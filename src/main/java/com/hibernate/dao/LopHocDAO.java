@@ -1,6 +1,7 @@
 package com.hibernate.dao;
 
 import java.sql.*;
+import java.util.*;
 
 import com.hibernate.util.HibernateUtil;
 
@@ -27,7 +28,8 @@ public class LopHocDAO {
         // }
     }
 
-    public static void XemDanhSachLop(String tenLop) throws SQLException {
+    public static ArrayList<ArrayList<String>> XemDanhSachLop(String tenLop) throws SQLException {
+        ArrayList<ArrayList<String>> list = new ArrayList<>();
         Connection conn = null;
         // try {
             conn = HibernateUtil.getConnection();
@@ -36,9 +38,22 @@ public class LopHocDAO {
             xemDanhSach.setString(1, tenLop);
 
             ResultSet rs = xemDanhSach.executeQuery();
+            ArrayList<String> l1 = new ArrayList<>();
+            ArrayList<String> l2 = new ArrayList<>();
+            ArrayList<String> l3 = new ArrayList<>();
+            ArrayList<String> l4 = new ArrayList<>();
             while (rs.next()) {
-                System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4));
+                l1.add(rs.getString(1));
+                l2.add(rs.getString(2));
+                l3.add(rs.getString(3));
+                l4.add(rs.getString(4));
+                // System.out.println(rs.getString(1) + " " + rs.getString(2) + " " + rs.getString(3) + " " + rs.getString(4));
             }
+            list.add(l1);
+            list.add(l2);
+            list.add(l4);
+            list.add(l3);
+            return list;
         // }
         // catch (SQLException se) {
         //     System.err.println("Lỗi ở hàm XemDanhSachLop(String tenLop) file LopHocDAO");
@@ -53,13 +68,21 @@ public class LopHocDAO {
     }
 
     public static void main(String[] args) {
+        ArrayList<ArrayList<String>> list = new ArrayList<>();
+        try {
+            list = XemDanhSachLop("18CT2");
+            for (int i = 0; i < list.get(0).size(); i++) {
+                for (int j = 0; j < list.size(); j++) {
+                    System.out.print(list.get(j).get(i) + "\t");
+                }
+                System.out.println();
+            }
+        } 
+        catch (SQLException se) {
+            System.err.println(se);
+        }
         // addLopHoc("18CTT2");
-        // importDanhSachLop("./data/Danh sách lớp/18CTT1.csv");
-        // importDanhSachLop("./data/Danh sách lớp/18CTT2.csv");
-        // importDanhSachLop("./data/Danh sách lớp/18CTT3.csv");
         // XemDanhSachLop("18CTT2");
-        // addSinhVien(new SinhVien("00000000", "Sinh Viên phụ", "Nam", "000000000"), "18CTT1");
         System.out.println("hello :)");
-        // addSinhVien(new SinhVien("18120201", "Nguyễn Bảo Long", "Nam", "241845617"), "18CTT1");
     }
 }

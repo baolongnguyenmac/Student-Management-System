@@ -2,39 +2,58 @@ package com.hibernate.dao;
 
 import java.io.*;
 import java.sql.*;
+import java.util.ArrayList;
 
 import com.hibernate.util.HibernateUtil;
 
 public class SinhVien_MonHocDAO {
-    public static void XemBangDiem_SinhVien(String mssv) {
+    public static ArrayList<ArrayList<String>> XemBangDiem_SinhVien(String mssv) throws SQLException {
+        ArrayList<ArrayList<String>> list = new ArrayList<>();
         Connection conn = null;
-        try {
+        // try {
             conn = HibernateUtil.getConnection();
             // XemDiem_SinhVien @mssv CHAR(10)
             CallableStatement xemDiem = conn.prepareCall("{Call XemDiem_SinhVien (?)}");
             xemDiem.setString(1, mssv);
             ResultSet rs = xemDiem.executeQuery();
+            ArrayList<String> l1 = new ArrayList<>();
+            ArrayList<String> l2 = new ArrayList<>();
+            ArrayList<String> l3 = new ArrayList<>();
+            ArrayList<String> l4 = new ArrayList<>();
+            ArrayList<String> l5 = new ArrayList<>();
             while (rs.next()) {
-                for (int i = 1; i <= 5; i++) {
-                    System.out.print(rs.getString(i) + " ");
-                }
-                System.out.println();
+                l1.add(rs.getString(1));
+                l2.add(rs.getString(2));
+                l3.add(rs.getString(3));
+                l4.add(rs.getString(4));
+                l5.add(rs.getString(5));
+                // for (int i = 1; i <= 5; i++) {
+                //     System.out.print(rs.getString(i) + " ");
+                // }
+                // System.out.println();
             }
-        }
-        catch (SQLException se) {
-            System.err.println("Lỗi ở hàm XemDiem_SinhVien file SinhVien_MonHocDAO");
-            do {
-                System.out.println("MESSAGE: " + se.getMessage());
-                System.out.println();
-                se = se.getNextException();
-            }
-            while (se != null);
-        }
+            list.add(l1);
+            list.add(l2);
+            list.add(l3);
+            list.add(l4);
+            list.add(l5);
+        // }
+        // catch (SQLException se) {
+        //     System.err.println("Lỗi ở hàm XemDiem_SinhVien file SinhVien_MonHocDAO");
+        //     do {
+        //         System.out.println("MESSAGE: " + se.getMessage());
+        //         System.out.println();
+        //         se = se.getNextException();
+        //     }
+        //     while (se != null);
+        // }
+        return list;
     }
 
-    public static void XemBangDiem_GiaoVu(String tenLop, String tenMonHoc) {
+    public static ArrayList<ArrayList<String>> XemBangDiem_GiaoVu(String tenLop, String tenMonHoc) throws SQLException {
+        ArrayList<ArrayList<String>> list = new ArrayList<>();
         Connection conn = null;
-        try {
+        // try {
             conn = HibernateUtil.getConnection();
             // XemDiem_GiaoVu @tenMonHoc NVARCHAR(100), @tenLop VARCHAR(10)
             CallableStatement xemDiem = conn.prepareCall("{Call XemDiem_GiaoVu (?, ?)}");
@@ -42,22 +61,44 @@ public class SinhVien_MonHocDAO {
             xemDiem.setString(2, tenLop);
 
             ResultSet rs = xemDiem.executeQuery();
+            ArrayList<String> l1 = new ArrayList<>();
+            ArrayList<String> l2 = new ArrayList<>();
+            ArrayList<String> l3 = new ArrayList<>();
+            ArrayList<String> l4 = new ArrayList<>();
+            ArrayList<String> l5 = new ArrayList<>();
+            ArrayList<String> l6 = new ArrayList<>();
+            ArrayList<String> l7 = new ArrayList<>();
             while (rs.next()) {
+                l1.add(rs.getString(1));
+                l2.add(rs.getString(2));
+                l3.add(rs.getString(3));
+                l4.add(rs.getString(4));
+                l4.add(rs.getString(5));
+                l6.add(rs.getString(6));
+                l7.add(rs.getString(7));
                 for (int i = 1; i <= 7; i++) {
                     System.out.print(rs.getString(i) + " ");
                 }
                 System.out.println();
             }
-        }
-        catch (SQLException se) {
-            System.err.println("Lỗi ở hàm XemBangDiem_GiaoVu file SinhVien_MonHocDAO");
-            do {
-                System.out.println("MESSAGE: " + se.getMessage());
-                System.out.println();
-                se = se.getNextException();
-            }
-            while (se != null);
-        }
+            list.add(l1);
+            list.add(l2);
+            list.add(l3);
+            list.add(l4);
+            list.add(l5);
+            list.add(l6);
+            list.add(l7);
+            return list;
+        // }
+        // catch (SQLException se) {
+        //     System.err.println("Lỗi ở hàm XemBangDiem_GiaoVu file SinhVien_MonHocDAO");
+        //     do {
+        //         System.out.println("MESSAGE: " + se.getMessage());
+        //         System.out.println();
+        //         se = se.getNextException();
+        //     }
+        //     while (se != null);
+        // }
     }
 
     private static String[] readLineBangDiem(String line) {
@@ -189,18 +230,37 @@ public class SinhVien_MonHocDAO {
     public static void main(String[] args) {
         // XemTKB_SinhVien("18120201");
         // XemTKB_LopHoc("18CTT2");
-        // ImportBangDiem("./data/Bảng điểm/18CTT1_DB.csv");
-        // ImportBangDiem("./data/Bảng điểm/18CTT1_OOP.csv");
-        // ImportBangDiem("./data/Bảng điểm/18CTT2_OOP.csv");
-        // ImportBangDiem("./data/Bảng điểm/18CTT2_DB.csv");
-        // ImportBangDiem("./data/Bảng điểm/18CTT3_DB.csv");
-        // ImportBangDiem("./data/Bảng điểm/18CTT3_OOP.csv");
-
+        
         // UpdateDiem("18120201", "Cơ sở  liệu", 9, 9, 9, 9);
         // HuyBoMonHoc("18120201", "Lập trình hướng đối tượng");
         // DangKyMonHoc("18120201", "Lập trình hướng đối tượng", "18CTT2");
         // XemBangDiem_GiaoVu("18CTT1", "Lập trình hướng đối tượng");
-        XemBangDiem_SinhVien("18120201");
+        ArrayList<ArrayList<String>> list = new ArrayList<>();
+        try {
+            ImportBangDiem("./data/Bảng điểm/18CTT1_DB.csv");
+            ImportBangDiem("./data/Bảng điểm/18CTT1_OOP.csv");
+            ImportBangDiem("./data/Bảng điểm/18CTT2_OOP.csv");
+            ImportBangDiem("./data/Bảng điểm/18CTT2_DB.csv");
+            ImportBangDiem("./data/Bảng điểm/18CTT3_DB.csv");
+            ImportBangDiem("./data/Bảng điểm/18CTT3_OOP.csv");
+            
+            list = XemBangDiem_SinhVien("18120201");
+            // for (int i = 0; i < list.size(); i++) {
+            //     for (int j = 0; j < list.get(0).size(); j++) {
+            //         System.out.print(list.get(i).get(j) + "\t");
+            //     }
+            //     System.out.println();
+            // }
+            for (int i = 0; i < list.get(0).size(); i++) {
+                for (int j = 0; j < list.size(); j++) {
+                    System.out.print(list.get(j).get(i) + "\t");
+                }
+                System.out.println();
+            }
+        }
+        catch (SQLException se) {
+            System.err.println(se);
+        }
 
         System.out.println("hello");
     }
