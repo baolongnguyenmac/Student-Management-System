@@ -1,21 +1,56 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.swing.view;
 
-/**
- *
- * @author nguyenbaolong
- */
+import javax.swing.JOptionPane;
+import javax.swing.event.*;
+
+import com.swing.controller.QLDiemController;
+
+import java.awt.event.*;
+import java.sql.SQLException;
+
+
 public class XemDiemLopHoc extends javax.swing.JPanel {
 
-    /**
-     * Creates new form XemDiemLopHoc
-     */
     public XemDiemLopHoc() {
         initComponents();
+
+        setEvent();
+    }
+
+    public void setEvent() {
+        SubmitButton.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    if (!isNotNull()) {
+                        showDialogAgain("Vui lòng nhập đủ các trường dữ liệu!");
+                    }
+                    else {
+                        String tenLop = TenLopTextField.getText();
+                        String tenMonHoc = TenMonHocTextField.getText();
+                        QLDiemController controller = new QLDiemController(ContentXemDiemLopHoc);
+                        controller.XemDiemLop(tenLop, tenMonHoc);
+                    }
+                }
+                catch (SQLException se) {
+                    showDialogAgain(se.getMessage());
+                    System.out.println(se);
+                }
+                catch (Exception ex) {
+                    showDialogAgain("Đã có lỗi xảy ra, hãy kiểm tra input");
+                    System.err.println(ex);
+                }
+            }
+        });
+    }
+
+    public boolean isNotNull() {
+        return TenLopTextField.getText() != null && !TenLopTextField.getText().equalsIgnoreCase("")
+            && TenMonHocTextField.getText() != null && !TenMonHocTextField.getText().equalsIgnoreCase("");
+    }
+
+    private void showDialogAgain(String str) {
+        JOptionPane.showMessageDialog(null, str);
     }
 
     /**
@@ -28,18 +63,65 @@ public class XemDiemLopHoc extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        TenLopTextField = new javax.swing.JTextField();
+        SubmitButton = new javax.swing.JButton();
+        ContentXemDiemLopHoc = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        TenMonHocTextField = new javax.swing.JTextField();
 
-        jPanel1.setBackground(new java.awt.Color(153, 153, 0));
+        jLabel1.setText("Nhập tên lớp: ");
+
+        SubmitButton.setText("Xem điểm");
+
+        javax.swing.GroupLayout ContentXemDiemLopHocLayout = new javax.swing.GroupLayout(ContentXemDiemLopHoc);
+        ContentXemDiemLopHoc.setLayout(ContentXemDiemLopHocLayout);
+        ContentXemDiemLopHocLayout.setHorizontalGroup(
+            ContentXemDiemLopHocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        ContentXemDiemLopHocLayout.setVerticalGroup(
+            ContentXemDiemLopHocLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 480, Short.MAX_VALUE)
+        );
+
+        jLabel2.setText("Nhập tên môn học: ");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(ContentXemDiemLopHoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(88, 88, 88)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(52, 52, 52)
+                        .addComponent(TenLopTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
+                        .addGap(175, 175, 175))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(TenMonHocTextField)
+                        .addGap(18, 18, 18)
+                        .addComponent(SubmitButton)
+                        .addGap(51, 51, 51))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(TenLopTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(TenMonHocTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SubmitButton))
+                .addGap(18, 18, 18)
+                .addComponent(ContentXemDiemLopHoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -56,6 +138,12 @@ public class XemDiemLopHoc extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel ContentXemDiemLopHoc;
+    private javax.swing.JButton SubmitButton;
+    private javax.swing.JTextField TenLopTextField;
+    private javax.swing.JTextField TenMonHocTextField;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

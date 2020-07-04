@@ -1,21 +1,53 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.swing.view;
 
-/**
- *
- * @author nguyenbaolong
- */
+import javax.swing.JOptionPane;
+import javax.swing.event.*;
+
+import com.swing.controller.QLTKBController;
+
+import java.awt.event.*;
+import java.sql.SQLException;
+
 public class XemTKBSinhVien extends javax.swing.JPanel {
 
-    /**
-     * Creates new form XemTKBSinhVien
-     */
     public XemTKBSinhVien() {
         initComponents();
+
+        setEvent();
+    }
+
+    public void setEvent() {
+        SubmitButton.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    if (!isNotNull()) {
+                        showDialogAgain("Vui lòng nhập tên lớp!");
+                    }
+                    else {
+                        String mssv = MSSVTextField.getText();
+                        QLTKBController controller = new QLTKBController(ContentXemTKBSinhVien);
+                        controller.XemTKBSinhVien(mssv);
+                    }
+                }
+                catch (SQLException se) {
+                    showDialogAgain(se.getMessage());
+                    System.out.println(se);
+                }
+                catch (Exception ex) {
+                    showDialogAgain("Đã có lỗi xảy ra, hãy kiểm tra input");
+                    System.err.println(ex);
+                }
+            }
+        });
+    }
+
+    public boolean isNotNull() {
+        return MSSVTextField.getText() != null && !MSSVTextField.getText().equalsIgnoreCase("");
+    }
+
+    private void showDialogAgain(String str) {
+        JOptionPane.showMessageDialog(null, str);
     }
 
     /**
@@ -28,18 +60,50 @@ public class XemTKBSinhVien extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        MSSVTextField = new javax.swing.JTextField();
+        SubmitButton = new javax.swing.JButton();
+        ContentXemTKBSinhVien = new javax.swing.JPanel();
 
-        jPanel1.setBackground(new java.awt.Color(255, 51, 153));
+        jLabel1.setText("Nhập MSSV: ");
+
+        SubmitButton.setText("Xem TKB");
+
+        javax.swing.GroupLayout ContentXemTKBSinhVienLayout = new javax.swing.GroupLayout(ContentXemTKBSinhVien);
+        ContentXemTKBSinhVien.setLayout(ContentXemTKBSinhVienLayout);
+        ContentXemTKBSinhVienLayout.setHorizontalGroup(
+            ContentXemTKBSinhVienLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        ContentXemTKBSinhVienLayout.setVerticalGroup(
+            ContentXemTKBSinhVienLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 515, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(126, 126, 126)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(MSSVTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(SubmitButton)
+                .addContainerGap(139, Short.MAX_VALUE))
+            .addComponent(ContentXemTKBSinhVien, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(MSSVTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(SubmitButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ContentXemTKBSinhVien, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -56,6 +120,10 @@ public class XemTKBSinhVien extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel ContentXemTKBSinhVien;
+    private javax.swing.JTextField MSSVTextField;
+    private javax.swing.JButton SubmitButton;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

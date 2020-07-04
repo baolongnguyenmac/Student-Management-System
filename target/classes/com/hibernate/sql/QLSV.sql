@@ -302,7 +302,7 @@ AS BEGIN
 
             INSERT SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc) VALUES (@maSinhVien, @maMonHoc_LopHoc)
         END
-        ELSE THROW 50009, N'Không tìm thấy sinh viên học môn học', 1;
+        ELSE THROW 50009, N'Sinh viên đang học môn học. Đăng ký thất bại', 1;
     END
     ELSE THROW 50010, N'Không tìm thấy sinh viên/lớp hoc/môn học', 1;
 END
@@ -428,7 +428,7 @@ AS BEGIN
             AND mh._tenMonHoc = @tenMonHoc AND mh._maMonHoc = mh_lh._maMonHoc
     ))
         THROW 50015, N'Không tìm thấy môn học thuộc lớp học', 1
-    SELECT sv._mssv, sv._hoTen, mh._tenMonHoc, sv_mh._diemCC, sv_mh._diemGK, sv_mh._diemCK, sv_mh._diemTong
+    SELECT sv._mssv, sv._hoTen, sv_mh._diemCC, sv_mh._diemGK, sv_mh._diemCK, sv_mh._diemTong
     FROM SinhVien_MonHoc sv_mh, SinhVien sv, MonHoc mh, MonHoc_LopHoc mh_lh, LopHoc lh
     WHERE sv._maSinhVien = sv_mh._maSinhVien 
         AND sv_mh._maMonHoc_LopHoc = mh_lh._maMonHoc_LopHoc
@@ -437,7 +437,7 @@ AS BEGIN
 END
 GO
 
--- EXEC XemDiem_GiaoVu N'Lập trình hướng đối tượng'
+-- EXEC XemDiem_GiaoVu N'Lập trình hướng đối tượng', '18CTT1'
 -- GO
 
 -- yêu cầu 9: Sửa điểm sinh viên 
@@ -472,7 +472,7 @@ AS BEGIN
 END
 GO
 
--- EXEC UpdateDiemSinhVien '18120211', N'm', 5.5, 5.5, 5.5, 5.5
+-- EXEC UpdateDiemSinhVien '18120201', N'Lập trình hướng đối tượng', 5.5, 5.5, 5.5, 0
 -- GO
 
 -- yêu cầu 10: Xem bảng điểm cho sinh viên

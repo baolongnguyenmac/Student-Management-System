@@ -1,21 +1,72 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.swing.view;
 
-/**
- *
- * @author nguyenbaolong
- */
+import javax.swing.JOptionPane;
+import javax.swing.event.*;
+
+import com.hibernate.dao.*;
+
+import java.awt.event.*;
+import java.sql.SQLException;
+
 public class DangKyMonHoc extends javax.swing.JPanel {
 
-    /**
-     * Creates new form DangKyMonHoc
-     */
     public DangKyMonHoc() {
         initComponents();
+
+        setEvent();
+    }
+
+    public void setEvent() {
+        SubmitButton.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    MsgLabel.setText("");
+                    if (!isNotNull()) {
+                        MsgLabel.setText("Vui lòng nhập tất cả các trường dữ liệu!");
+                    }
+                    else {
+                        if (showDialog()) {
+                            String tenMonHoc = TenMonHocTextField.getText();
+                            String tenLop = TenLopTextField.getText();
+                            String mssv = MSSVTextField.getText();
+                            SinhVien_MonHocDAO.DangKyMonHoc(mssv, tenMonHoc, tenLop);
+
+                            showDialogAgain("!!! Đăng ký thành công !!!");
+                            TenMonHocTextField.setText("");
+                            TenLopTextField.setText("");
+                            MSSVTextField.setText("");
+                        }
+                    }
+                }
+                catch (SQLException se) {
+                    MsgLabel.setText("");
+                    showDialogAgain(se.getMessage());
+                    System.out.println(se);
+                }
+                catch (Exception ex) {
+                    MsgLabel.setText("");
+                    showDialogAgain("Đã có lỗi xảy ra, hãy kiểm tra input");
+                    System.err.println(ex);
+                }
+            }
+        });
+    }
+
+    public boolean isNotNull() {
+        return TenMonHocTextField.getText() != null && !TenMonHocTextField.getText().equalsIgnoreCase("")
+            && TenLopTextField.getText() != null && !TenLopTextField.getText().equalsIgnoreCase("")
+            && MSSVTextField.getText() != null && !MSSVTextField.getText().equalsIgnoreCase("");
+    }
+
+    private boolean showDialog() {
+        int dialogResult = JOptionPane.showConfirmDialog(null,
+                "!!! Hành động này sẽ lưu thông tin xuống CDSL !!!", "Thông báo", JOptionPane.YES_NO_OPTION);
+        return dialogResult == JOptionPane.YES_OPTION;
+    }
+
+    private void showDialogAgain(String str) {
+        JOptionPane.showMessageDialog(null, str);
     }
 
     /**
@@ -28,18 +79,87 @@ public class DangKyMonHoc extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        SubmitButton = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        TenLopTextField = new javax.swing.JTextField();
+        TenMonHocTextField = new javax.swing.JTextField();
+        MSSVTextField = new javax.swing.JTextField();
+        MsgLabel = new javax.swing.JLabel();
 
-        jPanel1.setBackground(new java.awt.Color(102, 102, 255));
+        SubmitButton.setText("Đăng ký");
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Nhập thông tin đăng ký", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 13))); // NOI18N
+
+        jLabel1.setText("MSSV: ");
+
+        jLabel2.setText("Tên môn học: ");
+
+        jLabel3.setText("Tên lớp học: ");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(141, 141, 141)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(MSSVTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel2)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(TenMonHocTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(MsgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                            .addComponent(jLabel3)
+                            .addGap(18, 18, 18)
+                            .addComponent(TenLopTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(148, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(MSSVTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(TenMonHocTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(TenLopTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(41, 41, 41)
+                .addComponent(MsgLabel)
+                .addContainerGap(248, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(SubmitButton)
+                .addContainerGap())
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(SubmitButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -56,6 +176,15 @@ public class DangKyMonHoc extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField MSSVTextField;
+    private javax.swing.JLabel MsgLabel;
+    private javax.swing.JButton SubmitButton;
+    private javax.swing.JTextField TenLopTextField;
+    private javax.swing.JTextField TenMonHocTextField;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
 }

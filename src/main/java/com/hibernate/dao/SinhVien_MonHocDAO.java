@@ -67,19 +67,18 @@ public class SinhVien_MonHocDAO {
             ArrayList<String> l4 = new ArrayList<>();
             ArrayList<String> l5 = new ArrayList<>();
             ArrayList<String> l6 = new ArrayList<>();
-            ArrayList<String> l7 = new ArrayList<>();
             while (rs.next()) {
+                // SELECT sv._mssv, sv._hoTen, sv_mh._diemCC, sv_mh._diemGK, sv_mh._diemCK, sv_mh._diemTong
                 l1.add(rs.getString(1));
                 l2.add(rs.getString(2));
                 l3.add(rs.getString(3));
                 l4.add(rs.getString(4));
-                l4.add(rs.getString(5));
+                l5.add(rs.getString(5));
                 l6.add(rs.getString(6));
-                l7.add(rs.getString(7));
-                for (int i = 1; i <= 7; i++) {
-                    System.out.print(rs.getString(i) + " ");
-                }
-                System.out.println();
+                // for (int i = 1; i <= 6; i++) {
+                //     System.out.print(rs.getString(i) + " ");
+                // }
+                // System.out.println();
             }
             list.add(l1);
             list.add(l2);
@@ -87,7 +86,6 @@ public class SinhVien_MonHocDAO {
             list.add(l4);
             list.add(l5);
             list.add(l6);
-            list.add(l7);
             return list;
         // }
         // catch (SQLException se) {
@@ -237,12 +235,13 @@ public class SinhVien_MonHocDAO {
         // XemBangDiem_GiaoVu("18CTT1", "Lập trình hướng đối tượng");
         ArrayList<ArrayList<String>> list = new ArrayList<>();
         try {
-            ImportBangDiem("./data/Bảng điểm/18CTT1_DB.csv");
-            ImportBangDiem("./data/Bảng điểm/18CTT1_OOP.csv");
-            ImportBangDiem("./data/Bảng điểm/18CTT2_OOP.csv");
-            ImportBangDiem("./data/Bảng điểm/18CTT2_DB.csv");
-            ImportBangDiem("./data/Bảng điểm/18CTT3_DB.csv");
-            ImportBangDiem("./data/Bảng điểm/18CTT3_OOP.csv");
+            // ImportBangDiem("./data/Bảng điểm/18CTT1_DB.csv");
+            // ImportBangDiem("./data/Bảng điểm/18CTT1_OOP.csv");
+            // ImportBangDiem("./data/Bảng điểm/18CTT2_OOP.csv");
+            // ImportBangDiem("./data/Bảng điểm/18CTT2_DB.csv");
+            // ImportBangDiem("./data/Bảng điểm/18CTT3_DB.csv");
+            // ImportBangDiem("./data/Bảng điểm/18CTT3_OOP.csv");
+            // UpdateDiem("18120201", "Lập trình hướng đối tượng", 3, 3, 3, 3);
             
             list = XemBangDiem_SinhVien("18120201");
             // for (int i = 0; i < list.size(); i++) {

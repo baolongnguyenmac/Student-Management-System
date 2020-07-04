@@ -143,20 +143,20 @@ public class MonHoc_LopHocDAO {
         ArrayList<ArrayList<String>> list = new ArrayList<>();
         try {
 
-            // importTKB("./data/TKB/18CTT1.csv");
-            // importTKB("./data/TKB/18CTT2.csv");
-            // importTKB("./data/TKB/18CTT3.csv");
+            importTKB("./data/TKB/18CTT1.csv");
+            importTKB("./data/TKB/18CTT2.csv");
+            importTKB("./data/TKB/18CTT3.csv");
             // XemTKB_LopHoc("18CTT2");
             // XemTKB_SinhVien("18120201");
-            list = XemTKB_LopHoc("18CTT2");
-            for (int i = 0; i < list.get(0).size(); i++) {
-                for (int j = 0; j < list.size(); j++) {
-                    System.out.print(list.get(j).get(i) + "\t");
-                }
-                System.out.println();
-            }
-            // XemBangDiem_GiaoVu("18CTT2", "Lập trình hướng đối tượng");
-            System.out.println("hello");
+            // list = XemTKB_LopHoc("18CTT2");
+            // for (int i = 0; i < list.get(0).size(); i++) {
+            //     for (int j = 0; j < list.size(); j++) {
+            //         System.out.print(list.get(j).get(i) + "\t");
+            //     }
+            //     System.out.println();
+            // }
+            // // XemBangDiem_GiaoVu("18CTT2", "Lập trình hướng đối tượng");
+            // System.out.println("hello");
         }
         catch (Exception e) {
             System.err.println(e);

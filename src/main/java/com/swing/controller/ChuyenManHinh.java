@@ -4,22 +4,7 @@ import com.swing.obj.*;
 
 import javax.swing.*;
 
-import com.swing.view.AddDiemLopHoc;
-import com.swing.view.AddLopHoc;
-import com.swing.view.AddSinhVien;
-import com.swing.view.AddTKB;
-import com.swing.view.DangKyMonHoc;
-import com.swing.view.HuyMonHoc;
-import com.swing.view.QLDiem;
-import com.swing.view.QLLopHoc;
-import com.swing.view.QLMonHoc;
-import com.swing.view.QLTKB;
-import com.swing.view.TrangChu;
-import com.swing.view.UpdateDiemSV;
-import com.swing.view.XemDSLop;
-import com.swing.view.XemDiemLopHoc;
-import com.swing.view.XemTKBLop;
-import com.swing.view.XemTKBSinhVien;
+import com.swing.view.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -135,6 +120,10 @@ public class ChuyenManHinh {
 
                 case "UpdateDiemSV": {
                     node = new UpdateDiemSV();
+                } break;
+
+                case "ThongKeDuLieu": {
+                    node = new ThongKeDuLieu();
                 } break;
 
                 default: {

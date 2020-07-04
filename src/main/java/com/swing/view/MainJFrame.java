@@ -21,6 +21,7 @@ public class MainJFrame extends javax.swing.JFrame {
         listDanhMuc.add(new DanhMuc("QLMonHoc", QLMonHoc, QLMonHocLabel));
         listDanhMuc.add(new DanhMuc("QLTKB", QLTKB, QLTKBLabel));
         listDanhMuc.add(new DanhMuc("QLDiem", QLDiem, QLDiemLabel));
+        listDanhMuc.add(new DanhMuc("ThongKeDuLieu", ThongKeDuLieu, ThongKeDuLieuLabel));
 
         controller.setEvent(listDanhMuc);
     }
@@ -48,6 +49,8 @@ public class MainJFrame extends javax.swing.JFrame {
         QLDiemLabel = new javax.swing.JLabel();
         QLMonHoc = new javax.swing.JPanel();
         QLMonHocLabel = new javax.swing.JLabel();
+        ThongKeDuLieu = new javax.swing.JPanel();
+        ThongKeDuLieuLabel = new javax.swing.JLabel();
         ContentMainFrame = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -195,6 +198,29 @@ public class MainJFrame extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        ThongKeDuLieu.setBackground(new java.awt.Color(0, 204, 204));
+
+        ThongKeDuLieuLabel.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
+        ThongKeDuLieuLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/swing/images/tyLeQuaMon.png"))); // NOI18N
+        ThongKeDuLieuLabel.setText("Thống kê dữ liệu ");
+
+        javax.swing.GroupLayout ThongKeDuLieuLayout = new javax.swing.GroupLayout(ThongKeDuLieu);
+        ThongKeDuLieu.setLayout(ThongKeDuLieuLayout);
+        ThongKeDuLieuLayout.setHorizontalGroup(
+            ThongKeDuLieuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ThongKeDuLieuLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(ThongKeDuLieuLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        ThongKeDuLieuLayout.setVerticalGroup(
+            ThongKeDuLieuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ThongKeDuLieuLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(ThongKeDuLieuLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout TabMainFrameLayout = new javax.swing.GroupLayout(TabMainFrame);
         TabMainFrame.setLayout(TabMainFrameLayout);
         TabMainFrameLayout.setHorizontalGroup(
@@ -205,6 +231,7 @@ public class MainJFrame extends javax.swing.JFrame {
             .addComponent(QLDiem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(QLMonHoc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(TrangChu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(ThongKeDuLieu, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         TabMainFrameLayout.setVerticalGroup(
             TabMainFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -220,7 +247,9 @@ public class MainJFrame extends javax.swing.JFrame {
                 .addComponent(QLDiem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(QLMonHoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 135, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ThongKeDuLieu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 57, Short.MAX_VALUE))
         );
 
         ContentMainFrame.setBackground(new java.awt.Color(0, 51, 51));
@@ -276,6 +305,8 @@ public class MainJFrame extends javax.swing.JFrame {
     private javax.swing.JPanel QLTKB;
     private javax.swing.JLabel QLTKBLabel;
     private javax.swing.JPanel TabMainFrame;
+    private javax.swing.JPanel ThongKeDuLieu;
+    private javax.swing.JLabel ThongKeDuLieuLabel;
     private javax.swing.JPanel Title;
     private javax.swing.JLabel TitleLabel;
     private javax.swing.JPanel TrangChu;

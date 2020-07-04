@@ -124,7 +124,7 @@ public class SinhVienDAO {
             // UpdateDiem("18120201", "Lập trình hướng đối tượng", 9, 9, 9, 9);
         }
         catch (SQLException se) {
-            
+            System.err.println(se);
         }
     }
 }
