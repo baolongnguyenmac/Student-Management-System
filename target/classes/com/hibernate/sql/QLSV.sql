@@ -46,6 +46,7 @@ CREATE TABLE MonHoc_LopHoc (
     _maMonHoc BIGINT NOT NULL,
     _phongHoc VARCHAR(10),
 
+    CONSTRAINT mh_lh UNIQUE (_maLop, _maMonHoc),
     CONSTRAINT PK_MonHoc_LopHoc PRIMARY KEY(_maMonHoc_LopHoc)
 )
 GO
@@ -59,6 +60,7 @@ CREATE TABLE SinhVien_MonHoc (
     _diemCK FLOAT,
     _diemTong FLOAT,
 
+    CONSTRAINT sinhVien_MonHoc_LopHoc UNIQUE (_maSinhVien, _maMonHoc_LopHoc),
     CONSTRAINT PK_SinhVien_MonHoc PRIMARY KEY(_maSinhVien_MonHoc)
 )
 GO

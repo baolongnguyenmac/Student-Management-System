@@ -11,10 +11,11 @@ public class MonHoc_LopHocDAO {
         return line.split(",");
     }
 
-    public static void importTKB(String filename) throws SQLException {
+    public static String importTKB(String filename) throws SQLException {
         Connection conn = null;
         BufferedReader br = null;
         String line = null;
+        String tenLop = null;
 
         try {
             conn = HibernateUtil.getConnection();
@@ -25,7 +26,7 @@ public class MonHoc_LopHocDAO {
             CallableStatement importTKB = conn.prepareCall("{Call Import_TKB(?, ?, ?)}");
 
             // tạo lớp học: k.tr xem có tạo trước đó chưa, nếu chưa thì tạo
-            String tenLop = br.readLine();
+            tenLop = br.readLine();
             LopHocDAO.addLopHoc(tenLop);
 
             br.readLine();
@@ -65,6 +66,7 @@ public class MonHoc_LopHocDAO {
                 }
             }
         }
+        return tenLop;
     }
 
     public static ArrayList<ArrayList<String>> XemTKB_SinhVien(String mssv) throws SQLException {
@@ -140,7 +142,7 @@ public class MonHoc_LopHocDAO {
     }
 
     public static void main(String[] args) {
-        ArrayList<ArrayList<String>> list = new ArrayList<>();
+        // ArrayList<ArrayList<String>> list = new ArrayList<>();
         try {
 
             importTKB("./data/TKB/18CTT1.csv");

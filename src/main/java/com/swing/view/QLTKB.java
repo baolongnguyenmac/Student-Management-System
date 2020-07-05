@@ -8,9 +8,9 @@ public class QLTKB extends javax.swing.JPanel {
 
     public QLTKB() {
         initComponents();
-        
+
         ChuyenManHinh controller = new ChuyenManHinh(ContentQLTKB);
-        // controller.setView(TrangChu, TrangChuLabel);
+        controller.setView(AddTKB, AddTKBLabel, "AddTKB");
 
         List<DanhMuc> listDanhMuc = new ArrayList<>();
         listDanhMuc.add(new DanhMuc("AddTKB", AddTKB, AddTKBLabel));

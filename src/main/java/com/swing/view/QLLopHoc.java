@@ -12,7 +12,7 @@ public class QLLopHoc extends javax.swing.JPanel {
         initComponents();
 
         ChuyenManHinh controller = new ChuyenManHinh(ContentQLLopHoc);
-        // controller.setView(TrangChu, TrangChuLabel);
+        controller.setView(AddLopHoc, AddLopHocLabel, "AddLopHoc");
 
         List<DanhMuc> listDanhMuc = new ArrayList<>();
         listDanhMuc.add(new DanhMuc("AddLopHoc", AddLopHoc, AddLopHocLabel));
@@ -40,10 +40,6 @@ public class QLLopHoc extends javax.swing.JPanel {
         XemDSLop = new javax.swing.JPanel();
         XemDSLopLabel = new javax.swing.JLabel();
         ContentQLLopHoc = new javax.swing.JPanel();
-
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        TabQLLopHoc.setBackground(new java.awt.Color(255, 255, 255));
 
         AddSinhVien.setBackground(new java.awt.Color(0, 204, 204));
 
@@ -140,8 +136,6 @@ public class QLLopHoc extends javax.swing.JPanel {
                     .addComponent(AddSinhVien, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        ContentQLLopHoc.setBackground(new java.awt.Color(255, 255, 0));
 
         javax.swing.GroupLayout ContentQLLopHocLayout = new javax.swing.GroupLayout(ContentQLLopHoc);
         ContentQLLopHoc.setLayout(ContentQLLopHocLayout);

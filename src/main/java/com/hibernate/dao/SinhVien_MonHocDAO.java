@@ -103,10 +103,11 @@ public class SinhVien_MonHocDAO {
         return line.split(",");
     }
 
-    public static void ImportBangDiem(String filename) throws SQLException {
+    public static String[] ImportBangDiem(String filename) throws SQLException {
         Connection conn = null;
         BufferedReader br = null;
         String line = null;
+        String[] res = new String[2];
 
         try {
             // br = new BufferedReader(new FileReader(filename));
@@ -116,7 +117,9 @@ public class SinhVien_MonHocDAO {
             CallableStatement importDiem = conn.prepareCall("{Call ImportBangDiem(?, ?, ?, ?, ? ,?, ?)}");
 
             String tenLop = br.readLine();
+            res[0] = tenLop;
             String tenMonHoc = br.readLine();
+            res[1] = tenMonHoc;
 
             br.readLine();
             while ((line = br.readLine()) != null) {
@@ -154,6 +157,7 @@ public class SinhVien_MonHocDAO {
                 }
             }
         }
+        return res;
     }
 
     public static void UpdateDiem(String mssv, String tenMonHoc, float diemCC, float diemGK, float diemCK, float diemTong) throws SQLException {

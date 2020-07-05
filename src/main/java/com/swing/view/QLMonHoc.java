@@ -11,7 +11,7 @@ public class QLMonHoc extends javax.swing.JPanel {
         initComponents();
         
         ChuyenManHinh controller = new ChuyenManHinh(ContentQLMonHoc);
-        // controller.setView(TrangChu, TrangChuLabel);
+        controller.setView(DangKyMonHoc, DangKyMonHocLabel, "DangKyMonHoc");
 
         List<DanhMuc> listDanhMuc = new ArrayList<>();
         listDanhMuc.add(new DanhMuc("DangKyMonHoc", DangKyMonHoc, DangKyMonHocLabel));

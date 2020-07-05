@@ -13,7 +13,7 @@ public class MainJFrame extends javax.swing.JFrame {
         this.setTitle("Quản lý sinh viên");
 
         ChuyenManHinh controller = new ChuyenManHinh(ContentMainFrame);
-        controller.setView(TrangChu, TrangChuLabel);
+        controller.setView(TrangChu, TrangChuLabel, "TrangChu");
 
         List<DanhMuc> listDanhMuc = new ArrayList<>();
         listDanhMuc.add(new DanhMuc("TrangChu", TrangChu, TrangChuLabel));
@@ -258,7 +258,7 @@ public class MainJFrame extends javax.swing.JFrame {
         ContentMainFrame.setLayout(ContentMainFrameLayout);
         ContentMainFrameLayout.setHorizontalGroup(
             ContentMainFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 832, Short.MAX_VALUE)
+            .addGap(0, 790, Short.MAX_VALUE)
         );
         ContentMainFrameLayout.setVerticalGroup(
             ContentMainFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

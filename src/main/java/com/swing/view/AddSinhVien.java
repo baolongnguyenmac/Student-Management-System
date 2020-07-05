@@ -22,9 +22,8 @@ public class AddSinhVien extends javax.swing.JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
-                    MsgLabel.setText("");
                     if (!isNotNull()) {
-                        MsgLabel.setText("Vui lòng nhập tất cả các trường dữ liệu!");
+                        showDialogAgain("Vui lòng nhập tất cả các trường dữ liệu!");
                     }
                     else {
                         String isBoi = "Nam";
@@ -43,12 +42,10 @@ public class AddSinhVien extends javax.swing.JPanel {
                     }
                 }
                 catch (SQLException se) {
-                    MsgLabel.setText("");
                     showDialogAgain(se.getMessage());
                     System.out.println(se);
                 }
                 catch (Exception ex) {
-                    MsgLabel.setText("");
                     System.err.println(ex);
                     showDialogAgain("Đã có lỗi xảy ra, hãy kiểm tra input");
                 }
@@ -83,7 +80,6 @@ public class AddSinhVien extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        SubmitButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         HoTenLabell = new javax.swing.JLabel();
         LopLabel = new javax.swing.JLabel();
@@ -96,16 +92,9 @@ public class AddSinhVien extends javax.swing.JPanel {
         CMNDTextField = new javax.swing.JTextField();
         NamRadioButton = new javax.swing.JRadioButton();
         NuRadioButton = new javax.swing.JRadioButton();
-        MsgLabel = new javax.swing.JLabel();
+        SubmitButton = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        SubmitButton.setText("Lưu thông tin");
-        SubmitButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SubmitButtonActionPerformed(evt);
-            }
-        });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Nhập thông tin sinh viên ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 13))); // NOI18N
 
@@ -130,12 +119,19 @@ public class AddSinhVien extends javax.swing.JPanel {
 
         NuRadioButton.setText("Nữ");
 
+        SubmitButton.setText("Lưu thông tin");
+        SubmitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SubmitButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(189, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(175, 175, 175)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(HoTenLabell)
                     .addComponent(LopLabel)
@@ -144,6 +140,7 @@ public class AddSinhVien extends javax.swing.JPanel {
                     .addComponent(CMNDLabel))
                 .addGap(21, 21, 21)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(SubmitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(LopHocTextField)
                         .addComponent(HoTenTextField)
@@ -153,16 +150,12 @@ public class AddSinhVien extends javax.swing.JPanel {
                         .addComponent(NamRadioButton)
                         .addGap(18, 18, 18)
                         .addComponent(NuRadioButton)))
-                .addGap(169, 169, 169))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(269, 269, 269)
-                .addComponent(MsgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(183, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(98, 98, 98)
+                .addGap(46, 46, 46)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(HoTenLabell)
                     .addComponent(HoTenTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -184,27 +177,19 @@ public class AddSinhVien extends javax.swing.JPanel {
                     .addComponent(CMNDLabel)
                     .addComponent(CMNDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(MsgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(139, Short.MAX_VALUE))
+                .addComponent(SubmitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(261, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(665, Short.MAX_VALUE)
-                .addComponent(SubmitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(SubmitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -238,7 +223,6 @@ public class AddSinhVien extends javax.swing.JPanel {
     private javax.swing.JLabel LopLabel;
     private javax.swing.JLabel MSSVLabel;
     private javax.swing.JTextField MSSVTextField;
-    private javax.swing.JLabel MsgLabel;
     private javax.swing.JRadioButton NamRadioButton;
     private javax.swing.JRadioButton NuRadioButton;
     private javax.swing.JButton SubmitButton;

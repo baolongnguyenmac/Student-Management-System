@@ -2,6 +2,8 @@ package com.swing.view;
 
 import com.swing.controller.ChuyenManHinh;
 import com.swing.obj.DanhMuc;
+
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,9 +11,9 @@ public class QLDiem extends javax.swing.JPanel {
 
     public QLDiem() {
         initComponents();
-        
+
         ChuyenManHinh controller = new ChuyenManHinh(ContentQLDiem);
-        // controller.setView(TrangChu, TrangChuLabel);
+        controller.setView(AddDiemLopHoc, AddDiemLopHocLabel, "AddDiemLopHoc");
 
         List<DanhMuc> listDanhMuc = new ArrayList<>();
         listDanhMuc.add(new DanhMuc("AddDiemLopHoc", AddDiemLopHoc, AddDiemLopHocLabel));

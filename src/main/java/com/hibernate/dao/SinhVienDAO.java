@@ -55,10 +55,12 @@ public class SinhVienDAO {
     }
 
     // import danh sách lớp sử dụng stored procedure
-    public static void importDanhSachLop(String filename) throws SQLException {
+    // trả về tên lớp vừa import
+    public static String importDanhSachLop(String filename) throws SQLException {
         Connection conn = null;
         BufferedReader br = null;
         String line = null;
+        String tenLop = null;
 
         try {
             conn = HibernateUtil.getConnection();
@@ -70,7 +72,7 @@ public class SinhVienDAO {
             CallableStatement importSinhVien = conn.prepareCall("{Call Import_SinhVien(?, ?, ?, ?, ?)}");
 
             // nếu không tồn tại lớp học thì add lớp học vào 
-            String tenLop = br.readLine();
+            tenLop = br.readLine();
             LopHocDAO.addLopHoc(tenLop);
 
             br.readLine();
@@ -108,6 +110,7 @@ public class SinhVienDAO {
                 }
             }
         }
+        return tenLop;
     }
 
     public static void main(String[] args) {

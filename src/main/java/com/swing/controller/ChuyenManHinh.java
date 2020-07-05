@@ -21,15 +21,38 @@ public class ChuyenManHinh {
         this._rootPanel = _rootPanel;
     }
 
-    public void setView(JPanel panel, JLabel label) {
-        _selectedKind = "TrangChu";
+    public void setView(JPanel panel, JLabel label, String kind) {
+        _selectedKind = kind;
 
         panel.setBackground(new Color(96, 100, 191));
         label.setBackground(new Color(96, 100, 191));
 
         _rootPanel.removeAll();
         _rootPanel.setLayout(new BorderLayout());
-        _rootPanel.add(new TrangChu());
+        // _rootPanel.add(new TrangChu());
+
+        switch (kind) {
+            case "TrangChu": {
+                _rootPanel.add(new TrangChu());
+            } break;
+
+            case "AddDiemLopHoc": {
+                _rootPanel.add(new AddDiemLopHoc());
+            } break;
+
+            case "AddLopHoc": {
+                _rootPanel.add(new AddLopHoc());
+            } break;
+
+            case "DangKyMonHoc": {
+                _rootPanel.add(new DangKyMonHoc());
+            } break;
+
+            case "AddTKB": {
+                _rootPanel.add(new AddTKB());
+            } break;
+        }
+
         _rootPanel.validate();
         _rootPanel.repaint();
     }
