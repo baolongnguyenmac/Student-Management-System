@@ -1,6 +1,9 @@
 # Student-Management-System
 
-Student-Management-System, hibernate (sqlServer) + swing  
+* Student-Management-System, hibernate (sqlServer) + swing  
+* Sinh viên: Nguyễn Bảo Long  
+* MSSV: 18120201  
+* Email: 18120201@student.hcmus.edu.vn  
 
 ## Các chức năng trong bài
 
@@ -20,7 +23,20 @@ Student-Management-System, hibernate (sqlServer) + swing
     8.2. Cho biết tỷ lệ đậu rớt và danh sách đậu rớt kèm theo  
 9. Sửa điểm 1 sinh viên  
 
+## Màn hình chính  
+
 ## Yêu cầu 1: Thêm danh sách lớp  
 
-![Image of Yaktocat]  
-(https://octodex.github.com/images/yaktocat.png)  
+![Thêm danh sách lớp vào db thành công](./commit/AddLop.png)  
+![Thêm danh sách lớp vào db thành công](./commit/AddLopThanhCong.png)  
+
+## Yêu cầu 2: Thêm 1 sinh viên vào lớp  
+
+![Thêm sinh viên vào db](./commit/AddSinhVien.png)  
+![Thêm danh sinh viên vào db thành công](./commit/AddSinhVienThanhCong.png)  
+![Thêm danh sinh viên vào db thành công](./commit/AddSinhVienThanhCong1.png)  
+
+## Yêu cầu 3: Import TKB  
+
+![Thêm TKB vào db](./commit/AddTKB.png)  
+![Thêm TKB vào db thành công](./commit/AddTKBThanhCong.png)  
