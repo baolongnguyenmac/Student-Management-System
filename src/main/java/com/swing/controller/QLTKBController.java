@@ -12,15 +12,12 @@ import com.swing.table.TableMaker;
 
 public class QLTKBController {
     private JPanel _panel;
-    // private JButton _button;
-    // private JTextField _textField;
 
     public QLTKBController(JPanel _panel) {
         this._panel = _panel;
-        // this._button = _button;
-        // this._textField = _textField;
     }
 
+    // set data vào bảng 
     public void XemTKBSinhVien(String mssv) throws SQLException {
         ArrayList<ArrayList<String>> list = MonHoc_LopHocDAO.XemTKB_SinhVien(mssv);
         // SELECT mh._maMonCuaTruong, mh._tenMonHoc, mh_lh._phongHoc
@@ -66,6 +63,7 @@ public class QLTKBController {
         _panel.repaint();
     }
 
+    // set data vào bảng 
     public void XemTKBLop(String tenLop) throws SQLException {
         ArrayList<ArrayList<String>> list = MonHoc_LopHocDAO.XemTKB_LopHoc(tenLop);
         // SELECT mh._maMonCuaTruong, mh._tenMonHoc, mh_lh._phongHoc

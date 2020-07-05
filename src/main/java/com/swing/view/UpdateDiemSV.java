@@ -16,6 +16,7 @@ public class UpdateDiemSV extends javax.swing.JPanel {
         setEvent();
     }
 
+    // set event cho cái button để nhập data xuống db 
     public void setEvent() {
         SubmitButton.addMouseListener(new MouseInputAdapter() {
             @Override

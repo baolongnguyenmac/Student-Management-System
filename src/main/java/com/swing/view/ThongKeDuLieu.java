@@ -3,7 +3,6 @@ package com.swing.view;
 import javax.swing.JOptionPane;
 import javax.swing.event.*;
 
-import com.swing.controller.QLDiemController;
 import com.swing.controller.ThongKeController;
 
 import java.awt.event.*;
@@ -17,6 +16,7 @@ public class ThongKeDuLieu extends javax.swing.JPanel {
         setEvent();
     }
 
+    // set event cho cái button để bắt đầu làm thống kê 
     public void setEvent() {
         SubmitButton.addMouseListener(new MouseInputAdapter() {
             @Override

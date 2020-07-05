@@ -12,16 +12,12 @@ import com.swing.table.TableMaker;
 
 public class QLDiemController {
     private JPanel _panel;
-    // private JButton _button;
-    // private JTextField _textField;
 
     public QLDiemController(JPanel _panel) {
         this._panel = _panel;
-        // this._button = _button;
-        // this._textField = _textField;
     }
 
-/*  -- Lỡ viết nhưng thầy không yêu cầu :)
+/*  -- Lỡ viết nhưng thầy không yêu cầu :), xoá đi tiếc lắm 
     public void XemDiemSinhVien(String mssv) throws SQLException {
         ArrayList<ArrayList<String>> list = SinhVien_MonHocDAO.XemBangDiem_SinhVien(mssv);
         // SELECT mh._tenMonHoc, sv_mh._diemCC, sv_mh._diemGK, sv_mh._diemCK, sv_mh._diemTong
@@ -74,6 +70,7 @@ public class QLDiemController {
     }
 */
 
+    // setup data vào cái table để hiển thị 
     public void XemDiemLop(String tenLop, String tenMonHoc) throws SQLException {
         ArrayList<ArrayList<String>> list = SinhVien_MonHocDAO.XemBangDiem_GiaoVu(tenLop, tenMonHoc);
         // SELECT sv._mssv, sv._hoTen, sv_mh._diemCC, sv_mh._diemGK, sv_mh._diemCK, sv_mh._diemTong
@@ -130,20 +127,8 @@ public class QLDiemController {
         _panel.setLayout(new BorderLayout());
         _panel.add(table.getTableHeader(), BorderLayout.PAGE_START);
         _panel.add(table, BorderLayout.CENTER);
-        // _panel.add(scroll);
+        // _panel.add(scroll, BorderLayout.LINE_END);
         _panel.validate();
         _panel.repaint();
-
-        // float tyLeQuaMon = 0.0f;
-        // int count = 0;
-
-        // for (int i = 0; i < list.get(5).size(); i++) {
-        //     if (Float.parseFloat(list.get(5).get(i)) >= 5) {
-        //         count++;
-        //     }
-        // }
-
-        // tyLeQuaMon = count * 1.0f / list.get(5).size() * 100;
-        // return tyLeQuaMon;
     }
 }

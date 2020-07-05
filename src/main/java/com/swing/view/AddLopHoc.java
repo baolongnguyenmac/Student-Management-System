@@ -22,6 +22,7 @@ public class AddLopHoc extends javax.swing.JPanel {
         setEvent();
     }
 
+    // set event cho cái nút để import data
     public void setEvent() {
         ImportDataButton.addMouseListener(new MouseInputAdapter() {
             @Override

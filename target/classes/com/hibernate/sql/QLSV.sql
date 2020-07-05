@@ -493,74 +493,8 @@ GO
 -- EXEC XemDiem_SinhVien '18120201'
 -- GO
 
--- insert LopHoc (_tenLop) values ('18CTT1')
--- insert LopHoc (_tenLop) values ('18CTT2')
--- insert LopHoc (_tenLop) values ('18CTT3')
--- go
-
--- insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('18120201', N'Nguyễn Bảo Long', 'Nam', '241845617', 1)
--- insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('18120211', N'Võ Thế Minh', 'Nam', '241845618', 1)
--- insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('18120227', N'Phạm Văn Minh Phương', 'Nam', '241845619', 2)
--- insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('18120662', N'Trà Anh Toàn', 'Nam', '241845620', 2)
--- insert SinhVien (_mssv, _hoTen, _gioiTinh, _cmnd, _maLop) values ('10000000', N'Đặng Thị Hồng Suyên', N'Nữ', '241845621', 3)
--- go
-
--- insert MonHoc (_maMonCuaTruong, _tenMonHoc) values ('CTT001', N'Lập trình hướng đối tượng')
--- insert MonHoc (_maMonCuaTruong, _tenMonHoc) values ('CTT002', N'Cơ sở dữ liệu')
--- go 
-
-/* -- insert data for testing
--- 18ctt1 - oop - e1
-insert MonHoc_LopHoc (_maLop, _maMonHoc, _phongHoc) values (1,1,'E1')
--- 18ctt1 - db - e2
-insert MonHoc_LopHoc (_maLop, _maMonHoc, _phongHoc) values (1,2,'E2')
--- 18ctt2 - oop - e3
-insert MonHoc_LopHoc (_maLop, _maMonHoc, _phongHoc) values (2,1,'E3')
--- 18ctt2 - db - e4
-insert MonHoc_LopHoc (_maLop, _maMonHoc, _phongHoc) values (2,2,'E4')
--- 18ctt3 - oop - e5
-insert MonHoc_LopHoc (_maLop, _maMonHoc, _phongHoc) values (3,1,'E5')
--- 18ctt3 - db - e6
-insert MonHoc_LopHoc (_maLop, _maMonHoc, _phongHoc) values (3,2,'E6')
-go
-
--- sv 1 - 18ctt1 - oop - e1 - mark
-insert SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc, _diemCC, _diemCK, _diemGK, _diemTong) values (1,1,10,1,10,1)
--- sv 1 - 18ctt2 - db - e4 - mark - optional
-insert SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc, _diemCC, _diemCK, _diemGK, _diemTong) values (1,4,9,2,9,2)
--- sv 2 - 18ctt1 - oop - e1 - mark
-insert SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc, _diemCC, _diemCK, _diemGK, _diemTong) values (2,1,8,3,8,3)
--- sv 2 - 18ctt3 - db - e6 - mark - optional
-insert SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc, _diemCC, _diemCK, _diemGK, _diemTong) values (2,6,7,4,6,4)
--- sv 3 - 18ctt2 - oop - e3 - mark
-insert SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc, _diemCC, _diemCK, _diemGK, _diemTong) values (3,3,6,5,7,5)
--- sv 3 - 18ctt1 - db - e2 - mark - optional
-insert SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc, _diemCC, _diemCK, _diemGK, _diemTong) values (3,2,5,6,5,6)
--- sv 4 - 18ctt2 - db - e4 - mark
-insert SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc, _diemCC, _diemCK, _diemGK, _diemTong) values (4,3,4,7,4,7)
--- sv 4 - 18ctt3 - db - e6 - mark - optional
-insert SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc, _diemCC, _diemCK, _diemGK, _diemTong) values (4,6,3,8,3,8)
--- sv 5 - 18ctt3 - oop - e5 - mark
-insert SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc, _diemCC, _diemCK, _diemGK, _diemTong) values (5,5,2,9,2,9)
--- sv 5 - 18ctt1 - db - e2 - mark - optional 
-insert SinhVien_MonHoc (_maSinhVien, _maMonHoc_LopHoc, _diemCC, _diemCK, _diemGK, _diemTong) values (5,2,1,10,1,10)
-go
-*/
-
 SELECT * FROM MonHoc
 SELECT * from LopHoc
 select * from SinhVien
 select * from MonHoc_LopHoc
 select * from SinhVien_MonHoc
-
-
--- select 
---     mh._maMonHoc, mh._tenMonHoc
--- from 
---     SinhVien sv, SinhVien_MonHoc svmh, MonHoc_LopHoc mhlh, MonHoc mh
--- where 
---     sv._mssv = '18120201' and svmh._maSinhVien = sv._maSinhVien
---     and svmh._maMonHoc_LopHoc = mhlh._maMonHoc_LopHoc
---     and mhlh._maMonHoc = mh._maMonHoc
-
--- delete from MonHoc_LopHoc where _maMonHoc_LopHoc = 8

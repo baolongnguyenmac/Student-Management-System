@@ -21,6 +21,9 @@ public class ChuyenManHinh {
         this._rootPanel = _rootPanel;
     }
 
+    // hàm này dùng để set các tab mặc định cho 1 panel/frame
+    // cách làm việc: đổi màu tab mặc định và hiển thị nội dung tab đó
+    // truyền vào panel chứa cái tab đó và nhãn trong cái panel và kind of tab 
     public void setView(JPanel panel, JLabel label, String kind) {
         _selectedKind = kind;
 
@@ -57,6 +60,7 @@ public class ChuyenManHinh {
         _rootPanel.repaint();
     }
 
+    // add event cho các item trong _listDanhMuc 
     public void setEvent(List<DanhMuc> _listDanhMuc) {
         this._listDanhMuc = _listDanhMuc;
         for (DanhMuc item : _listDanhMuc) {
@@ -188,6 +192,7 @@ public class ChuyenManHinh {
         }
     }
 
+    // cop trên mạng, chả biết để làm gì luôn :)
     private void setChangeBackground(String kind) {
         for (DanhMuc dm: _listDanhMuc) {
             if (dm.get_kind().equalsIgnoreCase(kind)) {

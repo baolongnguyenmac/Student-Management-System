@@ -12,6 +12,7 @@ public class QLDiem extends javax.swing.JPanel {
     public QLDiem() {
         initComponents();
 
+        // set cái AddDiemLopHoc là cái nhìn thấy đầu tiên lúc mở tab QLDiem lên 
         ChuyenManHinh controller = new ChuyenManHinh(ContentQLDiem);
         controller.setView(AddDiemLopHoc, AddDiemLopHocLabel, "AddDiemLopHoc");
 

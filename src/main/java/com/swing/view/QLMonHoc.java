@@ -9,7 +9,8 @@ public class QLMonHoc extends javax.swing.JPanel {
 
     public QLMonHoc() {
         initComponents();
-        
+
+        // set cái DangKyMonHoc là cái nhìn thấy đầu tiên lúc mở tab QLMonHoc lên 
         ChuyenManHinh controller = new ChuyenManHinh(ContentQLMonHoc);
         controller.setView(DangKyMonHoc, DangKyMonHocLabel, "DangKyMonHoc");
 

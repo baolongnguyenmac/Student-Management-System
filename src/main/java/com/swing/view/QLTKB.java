@@ -9,6 +9,7 @@ public class QLTKB extends javax.swing.JPanel {
     public QLTKB() {
         initComponents();
 
+        // set cái AddTKB là cái nhìn thấy đầu tiên lúc mở tab QLTKB lên 
         ChuyenManHinh controller = new ChuyenManHinh(ContentQLTKB);
         controller.setView(AddTKB, AddTKBLabel, "AddTKB");
 

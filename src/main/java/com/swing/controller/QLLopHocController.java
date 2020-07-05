@@ -12,25 +12,16 @@ import com.swing.table.TableMaker;
 
 public class QLLopHocController {
     private JPanel _panel;
-    // private JButton _button;
-    // private JTextField _textField;
 
     public QLLopHocController(JPanel _panel) {
         this._panel = _panel;
-        // this._button = _button;
-        // this._textField = _textField;
     }
 
+    // set data lớp vào cái bảng thoi :> 
     public void XemDSLop(String tenLop) throws SQLException {
         ArrayList<ArrayList<String>> list = LopHocDAO.XemDanhSachLop(tenLop);
-        // ArrayList<String> stt = new ArrayList<>();
-        // for (int i = 0; i < list.get(0).size(); i++) {
-        //     stt.add(Integer.toString(i + 1));
-        // }
-        // list.add(0, stt);
         // SELECT sv._mssv, sv._hoTen, sv._gioiTinh, sv._cmnd
         ArrayList<String> listCol = new ArrayList<>();
-        // listCol.add("STT");
         listCol.add("MSSV");
         listCol.add("Họ và tên");
         listCol.add("CMND");

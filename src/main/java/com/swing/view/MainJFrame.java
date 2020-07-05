@@ -12,6 +12,7 @@ public class MainJFrame extends javax.swing.JFrame {
         initComponents();
         this.setTitle("Quản lý sinh viên");
 
+        // set cái trang chủ là cái nhìn thấy đầu tiên lúc mở c.tr lên 
         ChuyenManHinh controller = new ChuyenManHinh(ContentMainFrame);
         controller.setView(TrangChu, TrangChuLabel, "TrangChu");
 

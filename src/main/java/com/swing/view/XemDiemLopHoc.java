@@ -8,7 +8,6 @@ import com.swing.controller.QLDiemController;
 import java.awt.event.*;
 import java.sql.SQLException;
 
-
 public class XemDiemLopHoc extends javax.swing.JPanel {
 
     public XemDiemLopHoc() {
@@ -17,6 +16,7 @@ public class XemDiemLopHoc extends javax.swing.JPanel {
         setEvent();
     }
 
+    // set event cho cái button submit 
     public void setEvent() {
         SubmitButton.addMouseListener(new MouseInputAdapter() {
             @Override

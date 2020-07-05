@@ -11,6 +11,7 @@ public class QLLopHoc extends javax.swing.JPanel {
     public QLLopHoc() {
         initComponents();
 
+        // set cái AddLopHoc là cái nhìn thấy đầu tiên lúc mở tab QLLopHoc lên 
         ChuyenManHinh controller = new ChuyenManHinh(ContentQLLopHoc);
         controller.setView(AddLopHoc, AddLopHocLabel, "AddLopHoc");
 

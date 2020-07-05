@@ -17,6 +17,7 @@ public class AddSinhVien extends javax.swing.JPanel {
         setEvent();
     }
 
+    // set event cho nút add data
     public void setEvent() {
         SubmitButton.addMouseListener(new MouseInputAdapter() {
             @Override

@@ -13,14 +13,14 @@ import com.swing.table.TableMaker;
 public class ThongKeController {
     private JPanel _quaMonPanel;
     private JPanel _khongQuaMonPanel;
-    // private JButton _button;
-    // private JTextField _textField;
 
     public ThongKeController(JPanel _quaMonPanel, JPanel _khongQuaMonPanel) {
         this._quaMonPanel = _quaMonPanel;
         this._khongQuaMonPanel = _khongQuaMonPanel;
     }
 
+    // set data vào bảng 
+    // trả về tỷ lệ qua môn 
     public float ThongKeQuaMon(String tenLop, String tenMonHoc) throws SQLException {
         int count = 0;
         float tyLeQuaMon;
@@ -95,6 +95,8 @@ public class ThongKeController {
         return tyLeQuaMon;
     }
 
+    // trả về tỷ lệ không qua môn 
+    // set data vào bảng
     public float ThongKeKhongQuaMon(String tenLop, String tenMonHoc) throws SQLException {
         int count = 0;
         float tyLeKhongQuaMon;
