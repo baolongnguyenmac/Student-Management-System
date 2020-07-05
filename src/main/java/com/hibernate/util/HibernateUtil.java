@@ -1,5 +1,7 @@
 package com.hibernate.util;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
@@ -19,8 +21,16 @@ public class HibernateUtil {
     private static Connection connection = null;
 
     private static Connection buildConnection() {
+        Properties prop = new Properties();
+        InputStream inputFile = null;
         try {
-            Connection c = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=QLSV", "sa", "Long123ohio");
+            inputFile = new FileInputStream("SQLSetting.txt");
+            prop.load(inputFile);
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=" + prop.getProperty("db.dbname");
+            String username = prop.getProperty("db.user");
+            String pass = prop.getProperty("db.password");
+            // Connection c = DriverManager.getConnection("jdbc:sqlserver://localhost:1433;databaseName=QLSV", "sa", "Long123ohio");
+            Connection c = DriverManager.getConnection(url, username, pass);
             return c;
         }
         catch (Throwable ex) {
@@ -31,15 +41,26 @@ public class HibernateUtil {
     }
 
     private static SessionFactory buildSessionJavaConfigFactory() {
+        Properties prop = new Properties();
+        InputStream inputFile = null;
         try {
+            inputFile = new FileInputStream("SQLSetting.txt");
+            prop.load(inputFile);
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=" + prop.getProperty("db.dbname");
+            String username = prop.getProperty("db.user");
+            String pass = prop.getProperty("db.password");
+
             Configuration configuration = new Configuration();
 
             // Create Properties, can be read from property files too
             Properties props = new Properties();
             props.put("hibernate.connection.driver_class", "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            props.put("hibernate.connection.url", "jdbc:sqlserver://localhost:1433;databaseName=QLSV");
-            props.put("hibernate.connection.username", "sa");
-            props.put("hibernate.connection.password", "Long123ohio");
+            // props.put("hibernate.connection.url", "jdbc:sqlserver://localhost:1433;databaseName=QLSV");
+            // props.put("hibernate.connection.username", "sa");
+            // props.put("hibernate.connection.password", "Long123ohio");
+            props.put("hibernate.connection.url", url);
+            props.put("hibernate.connection.username", username);
+            props.put("hibernate.connection.password", pass);
             props.put("hibernate.current_session_context_class", "thread");
             props.put("hibernate.dialect", "org.hibernate.dialect.SQLServerDialect");
             props.put("hibernate.id.new_generator_mappings", "false");
@@ -56,7 +77,7 @@ public class HibernateUtil {
 
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
             // System.out.println("Hibernate Java Config serviceRegistry created");
-            System.out.println("Có vẻ đang ổn vãi lồn nhé");
+            System.out.println("Có vẻ đang ổn vãi lone nhé");
 
             SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 
