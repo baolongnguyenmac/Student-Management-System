@@ -33,9 +33,9 @@ public class QLTKBController {
         JTable table = new JTable(dtm);
         table.setFillsViewportHeight(true);
 
-        table.getColumnModel().getColumn(0).setMaxWidth(200);
-        table.getColumnModel().getColumn(0).setMinWidth(200);
-        table.getColumnModel().getColumn(0).setPreferredWidth(200);
+        table.getColumnModel().getColumn(0).setMaxWidth(100);
+        table.getColumnModel().getColumn(0).setMinWidth(100);
+        table.getColumnModel().getColumn(0).setPreferredWidth(100);
 
         table.getColumnModel().getColumn(1).setMaxWidth(200);
         table.getColumnModel().getColumn(1).setMinWidth(200);
@@ -44,6 +44,10 @@ public class QLTKBController {
         table.getColumnModel().getColumn(2).setMaxWidth(200);
         table.getColumnModel().getColumn(2).setMinWidth(200);
         table.getColumnModel().getColumn(2).setPreferredWidth(200);
+
+        table.getColumnModel().getColumn(3).setMaxWidth(200);
+        table.getColumnModel().getColumn(3).setMinWidth(200);
+        table.getColumnModel().getColumn(3).setPreferredWidth(200);
 
         table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         table.getTableHeader().setPreferredSize(new Dimension(100, 50));

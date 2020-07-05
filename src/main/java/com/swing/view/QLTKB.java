@@ -39,10 +39,6 @@ public class QLTKB extends javax.swing.JPanel {
         XemTKBSinhVienLabel = new javax.swing.JLabel();
         ContentQLTKB = new javax.swing.JPanel();
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        TabQLTKB.setBackground(new java.awt.Color(255, 255, 255));
-
         XemTKBLop.setBackground(new java.awt.Color(0, 204, 204));
 
         XemTKBLopLabel.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
@@ -138,8 +134,6 @@ public class QLTKB extends javax.swing.JPanel {
                     .addComponent(AddTKB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        ContentQLTKB.setBackground(new java.awt.Color(204, 255, 204));
 
         javax.swing.GroupLayout ContentQLTKBLayout = new javax.swing.GroupLayout(ContentQLTKB);
         ContentQLTKB.setLayout(ContentQLTKBLayout);

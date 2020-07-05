@@ -37,10 +37,6 @@ public class QLMonHoc extends javax.swing.JPanel {
         DangKyMonHocLabel = new javax.swing.JLabel();
         ContentQLMonHoc = new javax.swing.JPanel();
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        TabQLMonHoc.setBackground(new java.awt.Color(255, 255, 255));
-
         HuyMonHoc.setBackground(new java.awt.Color(0, 204, 204));
 
         HuyMonHocLabel.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
@@ -109,8 +105,6 @@ public class QLMonHoc extends javax.swing.JPanel {
                     .addComponent(DangKyMonHoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        ContentQLMonHoc.setBackground(new java.awt.Color(255, 153, 102));
 
         javax.swing.GroupLayout ContentQLMonHocLayout = new javax.swing.GroupLayout(ContentQLMonHoc);
         ContentQLMonHoc.setLayout(ContentQLMonHocLayout);

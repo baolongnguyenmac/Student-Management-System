@@ -6,6 +6,12 @@ import javax.swing.table.DefaultTableModel;
 
 public class TableMaker {
     public static DefaultTableModel getTable(ArrayList<ArrayList<String>> list, ArrayList<String> listCol) {
+        ArrayList<String> stt = new ArrayList<>();
+        for (int i = 0; i < list.get(0).size(); i++) {
+            stt.add(Integer.toString(i + 1));
+        }
+        list.add(0, stt);
+        listCol.add(0, "STT");
         DefaultTableModel dtm = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {

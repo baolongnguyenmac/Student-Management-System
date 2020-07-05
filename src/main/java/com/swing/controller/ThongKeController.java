@@ -105,6 +105,7 @@ public class ThongKeController {
                 for (int j = 0; j < list.size(); j++) {
                     list.get(j).remove(i);
                 }
+                i = -1;
             }
             else {
                 count++;

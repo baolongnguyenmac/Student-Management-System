@@ -42,10 +42,6 @@ public class QLDiem extends javax.swing.JPanel {
         XemDiemLopHocLabel = new javax.swing.JLabel();
         ContentQLDiem = new javax.swing.JPanel();
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        TabQLDiem.setBackground(new java.awt.Color(255, 255, 255));
-
         UpdateDiemSV.setBackground(new java.awt.Color(0, 204, 204));
 
         UpdateDiemSVLabel.setFont(new java.awt.Font("Lucida Grande", 0, 15)); // NOI18N
@@ -141,8 +137,6 @@ public class QLDiem extends javax.swing.JPanel {
                     .addComponent(AddDiemLopHoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        ContentQLDiem.setBackground(new java.awt.Color(0, 204, 102));
 
         javax.swing.GroupLayout ContentQLDiemLayout = new javax.swing.GroupLayout(ContentQLDiem);
         ContentQLDiem.setLayout(ContentQLDiemLayout);

@@ -23,8 +23,14 @@ public class QLLopHocController {
 
     public void XemDSLop(String tenLop) throws SQLException {
         ArrayList<ArrayList<String>> list = LopHocDAO.XemDanhSachLop(tenLop);
+        // ArrayList<String> stt = new ArrayList<>();
+        // for (int i = 0; i < list.get(0).size(); i++) {
+        //     stt.add(Integer.toString(i + 1));
+        // }
+        // list.add(0, stt);
         // SELECT sv._mssv, sv._hoTen, sv._gioiTinh, sv._cmnd
         ArrayList<String> listCol = new ArrayList<>();
+        // listCol.add("STT");
         listCol.add("MSSV");
         listCol.add("Họ và tên");
         listCol.add("CMND");
@@ -34,18 +40,25 @@ public class QLLopHocController {
         JTable table = new JTable(dtm);
         table.setFillsViewportHeight(true);
 
-        table.getColumnModel().getColumn(1).setMaxWidth(200);
-        table.getColumnModel().getColumn(1).setMinWidth(200);
-        table.getColumnModel().getColumn(1).setPreferredWidth(200);
-        table.getColumnModel().getColumn(2).setMaxWidth(200);
-        table.getColumnModel().getColumn(2).setMinWidth(200);
-        table.getColumnModel().getColumn(2).setPreferredWidth(200);
-        table.getColumnModel().getColumn(3).setMaxWidth(200);
-        table.getColumnModel().getColumn(3).setMinWidth(200);
-        table.getColumnModel().getColumn(3).setPreferredWidth(200);
-        table.getColumnModel().getColumn(0).setMaxWidth(200);
-        table.getColumnModel().getColumn(0).setMinWidth(200);
-        table.getColumnModel().getColumn(0).setPreferredWidth(200);
+        table.getColumnModel().getColumn(1).setMaxWidth(170);
+        table.getColumnModel().getColumn(1).setMinWidth(170);
+        table.getColumnModel().getColumn(1).setPreferredWidth(170);
+
+        table.getColumnModel().getColumn(2).setMaxWidth(170);
+        table.getColumnModel().getColumn(2).setMinWidth(170);
+        table.getColumnModel().getColumn(2).setPreferredWidth(170);
+
+        table.getColumnModel().getColumn(3).setMaxWidth(170);
+        table.getColumnModel().getColumn(3).setMinWidth(170);
+        table.getColumnModel().getColumn(3).setPreferredWidth(170);
+
+        table.getColumnModel().getColumn(4).setMaxWidth(170);
+        table.getColumnModel().getColumn(4).setMinWidth(170);
+        table.getColumnModel().getColumn(4).setPreferredWidth(170);
+
+        table.getColumnModel().getColumn(0).setMaxWidth(100);
+        table.getColumnModel().getColumn(0).setMinWidth(100);
+        table.getColumnModel().getColumn(0).setPreferredWidth(100);
 
         table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         table.getTableHeader().setPreferredSize(new Dimension(100, 50));

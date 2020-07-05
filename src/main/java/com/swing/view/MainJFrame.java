@@ -252,8 +252,6 @@ public class MainJFrame extends javax.swing.JFrame {
                 .addGap(0, 57, Short.MAX_VALUE))
         );
 
-        ContentMainFrame.setBackground(new java.awt.Color(0, 51, 51));
-
         javax.swing.GroupLayout ContentMainFrameLayout = new javax.swing.GroupLayout(ContentMainFrame);
         ContentMainFrame.setLayout(ContentMainFrameLayout);
         ContentMainFrameLayout.setHorizontalGroup(
