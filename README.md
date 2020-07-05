@@ -5,6 +5,12 @@
 * MSSV: 18120201  
 * Email: 18120201@student.hcmus.edu.vn  
 
+## Clone về máy và chạy  
+
+* Đồ án sử dụng SQLServer  
+* File cấu hình `SQLSetting.txt` chứa username, password và tên db. Có thể sửa đổi các thông tin này cho phù hợp  
+* Các tuỳ chọn sửa đổi sâu hơn về DB nằm trong file `HibernateUtil.java` (nằm trong đường dẫn ./src/main/java/com/hibernate/util/HibernateUtil.java)  
+
 ## Các chức năng trong bài
 
 1. Import danh sách lớp  
