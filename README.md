@@ -12,6 +12,7 @@
 * Các tuỳ chọn sửa đổi sâu hơn về DB nằm trong file `HibernateUtil.java` (nằm trong đường dẫn ./src/main/java/com/hibernate/util/HibernateUtil.java)  
 * Build: `mvn compile`  
 * Package: `mvn package`  
+* Sau khi package, ta sẽ có file jar. Để file SQLSetting.txt vào trong cùng thư mục mẹ với file jar :>  
 * Run: `java -jar QLSV.jar`. File jar ở trong /target/QLSV/QLSV.jar  
 
 ## Các chức năng trong bài
