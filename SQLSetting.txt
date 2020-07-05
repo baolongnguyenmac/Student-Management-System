@@ -1,0 +1,3 @@
+db.user=sa
+db.password=Long123ohio
+db.dbname=QLSV
