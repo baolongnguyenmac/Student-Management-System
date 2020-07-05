@@ -24,7 +24,7 @@ public class HibernateUtil {
         Properties prop = new Properties();
         InputStream inputFile = null;
         try {
-            inputFile = new FileInputStream("SQLSetting.txt");
+            inputFile = new FileInputStream("./SQLSetting.txt");
             prop.load(inputFile);
             String url = "jdbc:sqlserver://localhost:1433;databaseName=" + prop.getProperty("db.dbname");
             String username = prop.getProperty("db.user");
@@ -44,7 +44,7 @@ public class HibernateUtil {
         Properties prop = new Properties();
         InputStream inputFile = null;
         try {
-            inputFile = new FileInputStream("SQLSetting.txt");
+            inputFile = new FileInputStream("./SQLSetting.txt");
             prop.load(inputFile);
             String url = "jdbc:sqlserver://localhost:1433;databaseName=" + prop.getProperty("db.dbname");
             String username = prop.getProperty("db.user");
