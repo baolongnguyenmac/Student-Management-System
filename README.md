@@ -9,11 +9,11 @@
 
 * Đồ án sử dụng SQLServer  
 * File cấu hình `SQLSetting.txt` chứa username, password và tên db. Có thể sửa đổi các thông tin này cho phù hợp  
-* Các tuỳ chọn sửa đổi sâu hơn về DB nằm trong file `HibernateUtil.java` (nằm trong đường dẫn ./src/main/java/com/hibernate/util/HibernateUtil.java)  
+* Các tuỳ chọn sửa đổi sâu hơn về DB nằm trong file `HibernateUtil.java` (nằm trong đường dẫn `./src/main/java/com/hibernate/util/HibernateUtil.java`)  
 * Build: `mvn compile`  
 * Package: `mvn package`  
-* Sau khi package, ta sẽ có file jar. Để file SQLSetting.txt vào trong cùng thư mục mẹ với file jar :>  
-* Run: `java -jar QLSV.jar`. File jar ở trong /target/QLSV/QLSV.jar  
+* Sau khi package, ta sẽ có file jar. Để file `SQLSetting.txt` vào trong cùng thư mục mẹ với file jar (`/target/QLSV`)  
+* Run: `java -jar QLSV.jar`. File jar ở trong `/target/QLSV/QLSV.jar`  
 
 ## Các chức năng trong bài
 
