@@ -4,6 +4,7 @@
 * Sinh viên: Nguyễn Bảo Long  
 * MSSV: 18120201  
 * Email: 18120201@student.hcmus.edu.vn  
+* Link demo trên Youtube: https://youtu.be/sqYXHX-scps  
 
 ## Clone về máy và chạy  
 
@@ -34,6 +35,8 @@
 9. Sửa điểm 1 sinh viên  
 
 ## Màn hình chính  
+
+![Đáng ra là màn hình HomeScreen nhưng quên không chụp :) ](./commit/homeScreen.png)  
 
 ## Yêu cầu 1: Thêm danh sách lớp  
 
@@ -108,3 +111,10 @@
   
 * Xem lại bảng điểm `OOP` lớp `18CTT2`  
 ![Sửa điểm thành công](./commit/XemLai.png)  
+
+## Có thể xem chức năng thống kê trong link demo trên Youtube đã ghi ở phần thông tin  
+
+## Lưu ý  
+* Các anotation được dùng trong bài là để thuận tiện cho việc thao tác với database. Nhưng người viết không dùng nhiều  
+* Lý do chính cho việc này là vì Store Procedure đã ôm hết cmn việc rồi  
+* Các anotation được giữ lại vì sự thuận tiện của nó khi không có Store Procedure  
